@@ -2,7 +2,7 @@
 
 ## 类  
 
-在Java语言里，最基本的单位是类（class），类=成员变量+方法类是一组相关属性和行为的集合，类一般泛指莫一件事定义类的格式是  类的修饰词 class 类名{ 类体，成员变量和方法组成
+在Java语言里，最基本的单位是类（class），类=成员变量+方法  类是一组相关属性和行为的集合，类一般泛指莫一件事定义类的格式是  类的修饰词 class 类名{ 类体，成员变量和方法组成
 
 ## 类变量有成员变量和成员变量
 
@@ -16,10 +16,12 @@
 
 ## 对象
 
-对象有三个特征：继承，封装，多肽  
-1、继承   实现：extends 原理：子类可以继承父类的所有属性和方法   
-例如这题
- public class Cleanser {   
+对象有三个特征：继承，封装，多态
+1、继承   实现：extends 原理：子类可以继承父类的所有属性和方法
+例如这题  
+
+``` java
+ public class Cleanser {
      private String s=new String("Cleanser");  
      public void append(String a) { s+=a;}  
      public void dilute() {append("dilute()")  
@@ -43,15 +45,17 @@
                  public static void main(String[] args) {  
                      Detergent x = new Detergent();  
                      x.dilute();  
-                     x.apply(); 
+                     x.apply();
                       x.scrub();  
                       x.foam();  
                       x.print();  
                       System. out. println("Testing base class:");  
                       Cleanser.main(args);}} ///:  
+```  
+
 在这题中Detergent是洗涤剂  
 cleanser是清洁剂洗脸的  
-append是增加，附加  
+gvcappend是增加，附加  
  dilute是稀释冲淡  
  apply是涂  
  scrub是擦  
