@@ -8,3 +8,37 @@
 6、double（双精度浮点型）：定义浮点数类型 站八个字节  
 7、char（字符型）：定义字符型 占两个字节  
 8、Boolean（布尔型）：定义布尔值 占一个字节
+
+## java的数据类型和包装类型的对应关系
+
+byte → Byte
+
+short → Short
+
+int → Integer
+
+long → Long
+
+float → Float
+
+double → Double
+
+char → Character
+
+boolean→ Boolean
+
+## 基本数据类型与包装类的相互交换
+
+　　由基本数据类型向对应的包装类转换称为装箱，例如把int包装成integer类的对象
+
+　　由包装类相对应的基本数据类型转换称为拆箱，例如把integer类的对象重新简化为int
+
+## 拆箱和装箱
+
+自动拆箱：对象转换成基本数值
+
+自动装箱：基本数值转换成对象
+
+## 缓存池
+
+Integer 缓存池的大小默认为 -128~127
