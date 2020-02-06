@@ -16,41 +16,75 @@
 ## 对象
 
 对象有三个特征：继承，封装，多态
-1、继承   实现：extends 原理：子类可以继承父类的所有属性和方法
+
+### 继承
+
+实现：extends 原理：子类可以继承父类的所有属性和方法
 例如这题  
 
 ``` java
  public class Cleanser {
-     private String s=new String("Cleanser");  
-     public void append(String a) { s+=a;}  
-     public void dilute() {append("dilute()")  
-     public void apply() {append("apply()");}  
-     public void scrub() {append("scrub()");}  
-     public void print() {System.out.println(s);}  
-     public static void main(String[] args){  
-         Cleanser x=new Cleanser();  
-         x.dilute();  
-         x.apply();  
-         x.scrub();  
-         x.print();}}  
-         public class Detergent extends Cleanser {  
-             // Change a method:  
-             public void scrub() {  
-                 append(" Detergent. scrub()");  
-                 super.scrub(); // Call base-class version}  
-                 // Add methods to the interface:  
-                 public void foam() { append(" foam()"); }  
-                 // Test the new class:  
-                 public static void main(String[] args) {  
-                     Detergent x = new Detergent();  
-                     x.dilute();  
-                     x.apply();
-                      x.scrub();  
-                      x.foam();  
-                      x.print();  
-                      System. out. println("Testing base class:");  
-                      Cleanser.main(args);}} ///:  
+    private String s = new String("Cleanser");
+
+    public void append(String a)
+    {
+        s += a;
+    }
+
+    public void dilute()
+    {
+        append("dilute()");
+    }
+        public void apply ()
+        {
+            append("apply()");
+        }
+        public void scrub ()
+        {
+            append("scrub()");
+        }
+        public void print ()
+        {
+            System.out.println(s);
+        }
+        public static void main (String[] args)
+        {
+            Cleanser x = new Cleanser();
+            x.dilute();
+            x.apply();
+            x.scrub();
+            x.print();
+        }
+    }
 ```  
+
+```java
+public class Detergent extends Cleanser {
+    // Change a method:
+    public void scrub()
+    {
+        append(" Detergent. scrub()");
+        super.scrub(); // Call base-class version
+    }
+        // Add methods to the interface:
+        public void foam ()
+        {
+            append(" foam()");
+        }
+        // Test the new class:
+        public static void main (String[] args)
+        {
+            Detergent x = new Detergent();
+            x.dilute();
+            x.apply();
+            x.scrub();
+            x.foam();
+            x.print();
+            System.out.println("Testing base class:");
+            Cleanser.main(args);
+        }
+    } ///:
+```
 
 在这题中Detergent是洗涤剂  
 cleanser是清洁剂洗脸的  
