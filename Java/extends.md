@@ -94,3 +94,52 @@ gvcappend是增加，附加
  scrub是擦  
  foam是泡沫  
  子类继承了父类的x.dilute();x.apply();x.scrub();x.print();这些方法，比较公用的方法一般放在父类里
+
+### 封装
+
+1、什么是封装？  
+封装是指隐藏对象的属性和实现细节，仅对外提供公共访问方式。  
+2、封装的优点：  
+隐藏代码的实现细节，提高安全性。
+
+```java
+public class Person {
+    private String name;
+    private int age;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        if (age <= 0) {
+            System.out.println("您输入的年龄不正确");
+        } else {
+            this.age = age;
+        }
+    }
+
+    public void speak() {
+        System.out.println("我叫" + name + ",今年" + age + "岁了");
+    }
+}
+```
+
+```java
+public class Example01 {
+    public static void main(String[] args) {
+        Person p = new Person();
+        p.setName("lily");
+        p.setAge(10);
+        p.speak();
+    }
+}
+```

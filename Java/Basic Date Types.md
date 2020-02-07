@@ -39,6 +39,18 @@ boolean→ Boolean
 
 自动装箱：基本数值转换成对象
 
+### int和integer装箱用的方法
+
+1、构造方法：Integer(int value）  
+构造一个新分配的 Integer对象，该对象表示指定的 int值。  
+2、静态方法：static Integer valueOf(int i)  
+返回一个 Integer指定的 int值的 Integer实例。
+
+### int和integer拆箱用的方法
+
+1、成员方法  
+int intvalue()以int类型返回Integer的值。
+
 ## 缓存池
 
 Integer 缓存池的大小默认为 -128~127
