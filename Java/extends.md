@@ -93,4 +93,4 @@ gvcappend是增加，附加
  apply是涂  
  scrub是擦  
  foam是泡沫  
- 子类继承了父类的x.dilute();x.apply();x.scrub();x.print();这些方法，比较公用的方法一般放在父类里
+ 子类继承了父类的x.dilute();x.apply();x.scrub();x.print();这些方法，比较公用的方法一般放在父类里d
