@@ -68,8 +68,15 @@ public class Performance {
 原理：  
 1、比较相邻的元素。如果第一个比第二个大，就交换他们两个。  
 2、对每一对相邻元素做同样的工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。  
-3、针对所有的元素重复以上的步骤，除了最后一个。  
+3、针对所有的元素重复以上的步骤，除了最后一个。
 4、持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+
+例子：  
+24, 69, 80, 57, 13  
+第一趟后：24，69，57，13，80  
+第二趟后：24，57，13，69，80  
+第三趟后：24，13，57，69，80  
+第四趟后：13，24，57，69，80
 
 ```java
 public class BubbleSort {
@@ -82,12 +89,15 @@ public class BubbleSort {
 
 
     public static void bubbleSort(int[] arr) {
+        int count=1;
         for (int i = 0; i < arr.length - 1; i++) {                //外循环只需要比较arr.length-1次就可以了
             for (int j = 0; j < arr.length - 1 - i; j++) {        //-1为了防止索引越界,-i为了提高效率
                 if (arr[j] > arr[j + 1]) {
                     int temp = arr[j];
                     arr[j] = arr[j + 1];
                     arr[j + 1] = temp;
+                    System.out.println("第"+count+"次打印"+Arrays.toString(arr));
+                    count++;
                 }
             }
         }
