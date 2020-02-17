@@ -140,6 +140,7 @@ public class QuickSorting {
         int pivot = arr[start];
         int i = start;
         int j = end;
+        int count=1;
         while (i<j) {
             while ((i<j)&&(arr[j]>pivot)) {
                 j--;
@@ -154,6 +155,8 @@ public class QuickSorting {
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
+            System.out.println("第" + count + "次打印" + Arrays.toString(arr));
+            count++;
         }
         if (i-1>start) arr=qsort(arr,start,i-1);
         if (j+1<end) arr=qsort(arr,j+1,end);
