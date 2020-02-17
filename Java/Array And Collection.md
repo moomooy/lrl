@@ -82,7 +82,7 @@ public class Performance {
 public class BubbleSort {
 
     public static void main(String[] args) {
-        int[] arr = {24, 69, 80, 57, 13};
+        int[] arr = {1,2,3,4,5,6};
         bubbleSort(arr);
         print(arr);
     }
@@ -90,18 +90,25 @@ public class BubbleSort {
 
     public static void bubbleSort(int[] arr) {
         int count=1;
-        for (int i = 0; i < arr.length - 1; i++) {                //外循环只需要比较arr.length-1次就可以了
-            for (int j = 0; j < arr.length - 1 - i; j++) {        //-1为了防止索引越界,-i为了提高效率
+        boolean isSorted=false;
+        for (int i = 0; i < arr.length - 1; i++) {//外循环只需要比较arr.length-1次就可以了
+            if(isSorted)return;
+            for (int j = 0; j < arr.length - 1 - i; j++) {//-1为了防止索引越界,-i为了提高效率
+                System.out.println("第" + count + "次循环");
+                count++;
+                isSorted = true;
                 if (arr[j] > arr[j + 1]) {
                     int temp = arr[j];
                     arr[j] = arr[j + 1];
                     arr[j + 1] = temp;
-                    System.out.println("第"+count+"次打印"+Arrays.toString(arr));
+                    isSorted = false;
+                    System.out.println("第" + count + "次打印" + Arrays.toString(arr));
                     count++;
                 }
             }
         }
-    }
+        }
+
 
 
     public static void print(int[] arr) {
