@@ -77,6 +77,8 @@ public static void 方法名称(){
     }  
 方法的名称的命名的规则和变量是一样的，使用小驼峰  
 方法体：也就是大括号当中可以包含任意条语句  
+硅谷波你好弄  
+
 
 注意事项：  
 1、方法定义的先后顺序无所谓。  
@@ -169,4 +171,6 @@ public static void main(String[] args){
     System.out.println("y的值是："+y);
 }
 ```
+
+下一次学习which语句
 
