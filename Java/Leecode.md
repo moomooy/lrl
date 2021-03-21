@@ -31,3 +31,52 @@ class Solution {
         }
 }
 ```
+
+```java
+import java.util.Arrays;
+
+public class QuickSorting {
+    public void sortColors(int[] nums) {
+        quickSort(nums, 0, nums.length - 1);
+    }
+
+    public void quickSort(int[] nums, int left, int right) {
+        if (left < right) {
+            int middle = partition(nums, left, right);
+            quickSort(nums, left, middle - 1);
+            quickSort(nums, middle + 1, right);
+        }
+
+    }
+
+    public int partition(int[] nums, int left, int right) {
+        int pivot = nums[right];
+        // System.out.println(pivot);
+        int i = left - 1;
+        int j = left;
+        while (i < j && j < right) {
+            if (nums[j] <= pivot) {
+                i = i + 1;
+                int temp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = temp;
+            }
+            j++;
+        }
+        System.out.println(Arrays.toString(nums));
+        //System.out.println(nums[i + 1] + " " + pivot);
+        int tmp = nums[i + 1];
+        nums[i + 1] = pivot;
+        nums[right] = tmp;
+        //System.out.println(Arrays.toString(nums));
+        return i + 1;
+    }
+
+    public static void main(String[] args) {
+        int nums[] = new int[]{12, 11, 45, 6, 8, 43, 40, 57, 3, 20};
+        QuickSorting quickSorting = new QuickSorting();
+        quickSorting.sortColors(nums);
+        System.out.println(nums);
+}
+    }
+```
