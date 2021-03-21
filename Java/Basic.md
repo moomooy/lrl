@@ -125,7 +125,7 @@ public class Demo02If{
 }
 ```
 
-if语句第二种语句格式：  
+if语句第2种语句格式：  
 if（关系表达式）{  
     语句体1；  
     }else{  
