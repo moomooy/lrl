@@ -74,37 +74,71 @@ public class Demo12notice{
 
 ## 方法  
 
-定义一个方法的格式：  
+### 定义
 
-public static void 方法名称(){  
+定义：方法是就是若干个语句的功能的集合。  
+
+定义一个方法完整的格式：  
+
+public static（修饰符） void（返回值类型） 方法名称(参数类型 参数名称，...){  
     方法体  
+    return  返回值；  
     }  
-方法的名称的命名的规则和变量是一样的，使用小驼峰  
-方法体：也就是大括号当中可以包含任意条语句  
-硅谷波你好弄  
 
-注意事项：  
+### 名词解释  
+
+修饰符：现阶段的固定写法，public static  
+返回值类型：也就是方法最终产生的数据结果是什么类型  
+方法名称：方法的名字，规则和变量一样，小驼峰  
+参数类型：进入方法的数据是什么类型  
+参数名称：进入方法的数据对应的变量名称  
+ps：参数如果有多个，使用逗号进行分隔  
+方法体：方法需要做的事情。若干个代码  
+return：两个作用，第一停止当前方法，第二将后面的返回值还给调用处  
+返回值：也就是方法执行后最终产生的数据结果
+ps：return后面的“返回值”，必须和方法前面的“返回值类型",保持对应
+
+### 注意事项：  
 
 1、方法定义的先后顺序无所谓。  
 2、方法的定义不能产生嵌套包含关系。  
 3、方法定义好了之后，不会执行的。如果要想执行，一定要进行方法的【调用】  
-如何调用方法，格式：  
-方法名称（）；  
+4、此前学习的方法，返回值类型固定写为void，这种方法只能够单独调用，不能进行打印
+
+### 方法的三种调用格式  
+
+1、单独调用：方法名称（参数）；  
+2、打印调用：System.out.println(方法名称（参数）)；  
+3、赋值调用：数据类型  变量名称=方法名称（参数））；
+
+### 例子  
+
+定义一个两个int的的数字相加的方法。三要素：  
+返回值类型：int  
+方法名称：sum  
+参数列表：int a，int b  
 
 
 ```java
 public class Demo11Method{
     public static void main(String[] args){
-        famer();//调用农名
-        seller();//调用小商贩
-        cook();//调用厨子的方法
-        me();//调用我自己方法
+        //单独调用
+        sum(10,20);
+        System.out.println("===========");
+
+        //打印调用
+        System.out.println(sum(10,20));//30
+        System.out.println("============");
+
+        //赋值调用
+        int number=sum(15,25);
+        number+=100;
+        System.out.println("变量的值"+number);
     }
-    public static void cook(){
-        System.out.println("洗菜“)；
-        System.out.println("切菜”)；
-        System.out.println("炒菜“)；
-        System.out.println("装盘");
+    public static int sum(int a,int b){
+        System.out.println("方法执行了")；
+        int result=a+b;
+        return result;
     }
 }
 ```
