@@ -390,7 +390,7 @@ public class Demo15continue{
 
 ### 死循环  
 
-永远停不下来的循环叫做死循环。  
+永远停不下来的叫做死循环。  
 
 死循环的标准格式：  
 while（true）{
