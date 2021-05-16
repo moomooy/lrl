@@ -3300,4 +3300,101 @@ final关键字代表最终，不可改变的
 
 注意：内用外，随意访问；外用内，需要内部类对象  
 
+### 成员内部类的使用  
+
+1、间接方式：在外部类的方法中，使用内部类，然后main只是调用外部类的方法  
+2、直接方法，公式：  
+【外部类名称.内部类名称 对象名 = new 外部类名称().new 内部类名称();】  
+
+```java
+public class Body {//外部类
+    public class Heart{//成员内部类
+        //内部类的方法
+        public void beat(){
+            System.out.println("心脏跳动，蹦蹦蹦");
+            System.out.println("我叫"+name);
+        }
+        //定义类的成员变量
+        private String name;
+        //外部类的方法
+        public void methodbody(){
+            new Heart().beat();
+            System.out.println("外部类的方法");
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+}
+
+
+public class Demo07Inner {
+    public static void main(String[] args) {
+        Body body = new Body();//外部类的对象
+        //通过外部类的对象，调用外部类的方法，里面间接在使用内部类heart
+        Body.Heart heart = new Body().new Heart();
+        heart.beat();
+
+    }
+}
+```
+
+### 同名变量的访问  
+
+如果出现了重名现象，那么格式是：外部类.this.外部类成员变量  
+
+```java
+public class Outer {
+    int num = 10;
+
+    public class Inner{
+        int num = 20;
+        public void method(){
+            int num = 30;
+            System.out.println(num);
+            System.out.println(this.num);
+            System.out.println(Outer.this.num);
+        }
+    }
+}
+
+
+public class Demo07Outer {
+    public static void main(String[] args) {
+        Outer.Inner inner = new Outer().new Inner();
+        inner.method();
+    }
+}
+```
+
+### 局部内部类  
+
+如果一个类是定义在一个方法内部，那么这就是一个局部内部类  
+“局部”：只有当前所属的方法才能使用它，出了这个方法外面就不能用了。  
+
+定义格式：  
+```
+修饰符  class  外部类名称{
+    修饰符 返回值类型 外部类方法名称(){
+        class 局部内部类{
+            //...
+        }
+    }
+}
+```
+
+小节一下类的权限修饰符：  
+public > protected > (default) > private  
+定义一个类的时候，权限修饰符规则：  
+1、外部类：public / (default)  
+2、成员内部类：public / protected / (default) / private  
+
+
+
 
