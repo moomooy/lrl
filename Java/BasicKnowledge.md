@@ -3395,6 +3395,203 @@ public > protected > (default) > private
 1、外部类：public / (default)  
 2、成员内部类：public / protected / (default) / private  
 
+### 局部内部类的final问题  
+
+局部内部类：  
+
+如果希望访问所在方法的局部变量，那么这个局部变量必须是【有效final的】  
+
+备注：从Java 8+开始，只要局部变量事实不变，那么final关键字可以省略  
+
+原因：  
+1、new出来的对象在对内存中   
+2、局部变量是跟着对象走的，在栈内存中   
+3、方法运行之后，立刻出栈，局部变量就会立刻消失  
+4、但是new出来的对象会在堆内存中持续存在，直到垃圾回收，所以会复制过来  
+
+### 匿名内部类  
+
+如果接口的实现类(或者是父类的子类)，只需要使用唯一的一次  
+那么这种情况就可以省略该类的定义，而改为使用【匿名内部类】  
+
+匿名内部类的定义格式：  
+接口名称 对象名 = new 接口名称(){
+    //覆盖重写所有的抽象方法
+};
+
+```java
+public interface MyInterface {
+    void method();
+}
+
+public class Demomethod {
+    public static void main(String[] args) {
+
+        MyInterface pass = new MyInterface() {
+            @Override
+            public void method() {
+                System.out.println("匿名内部类实现了方法");
+            }
+        };
+        pass.method();
+    }
+}
+```
+
+注意事项：  
+1、匿名内部类，在【创建对象】的时候，只能使用唯一的一次  
+如果希望多次创建对象，而且类的内容一样的化，那么就必须使用单独定义的实现类   
+2、匿名对象：在【调用方法】的时候，只能调用唯一一次  
+如果希望同一个对象，调用多次方法，那么必须给对象起个名字  
+3、匿名内部类是省略了【实现类/子类】，但是匿名对象是省略了【对象名称】  
+强调：匿名内部类和匿名对象不是一回事5g
+
+# Java进阶  
+
+## object类  
+
+### object类的toString方法  
+
+java.lang.Object类  
+类 Object 是类层次结构的根(最顶层)类，每个类都使用object作为超(父)类  
+所有对象(包括数组)都实现这个类的方法  
+
+注意：看一个类是否重写了toString方法，直接打印这个类对应的对象名字即可  
+      如果没有重写toString方法，那么打印的就是对象的地址值(默认)
+      如果重写了toString方法，那么就按照重写的方式打印
+
+```java
+public class Demo01ToString {
+    public static void main(String[] args) {
+        /*Person类默认继承了object类，所以可以使用object类中的toString方法
+        String toString()返回对象的字符串表示
+         */
+        Person p = new Person();
+        String s =p.toString();
+        System.out.println(s);//Demo01.Person@1b6d3586
+
+        //直接打印对象的名字，其实就是在调用对象的toString方法
+        System.out.println(p);
+    }
+}
+
+public class Person {
+    private String name;
+    private int age;
+
+    public Person() {
+    }
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    /*直接打印对象的地址值没有意义，需要重写Object类的toString方法
+    打印对象的属性(name,age)
+     */
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+```
+
+### Object类的equals方法  
+
+关于object类中的equals方法  
+
+1、equals方法的源代码  
+
+```java
+public boolean equals(Object obj){
+    return(this == obj); 
+}
+```
+以上这个方法是object类的默认实现。  
+
+2、equals方法的目的是：在编程过程中，都要通过equals方法来判断两个对象是否相等  
+
+3、我们需要研究一下obj类给的这个默认的equals方法不够用，需要重写
+
+4、判断两个Java对象是否相等，不能使用“==”，因为“==”比较的是两个对象的内存地址
+
+```java
+public class Test02{
+    public static void main(String[] args){
+        //判断两个基本数据类型的数据是否相等直接使用“==”就行 
+        int a = 100;
+        int b = 100;
+        System.out.println(a==b);
+
+        //判断两个Java对象是否相等，我们怎么办，能直接使用“==”码？
+        //创建一个日期对象是：2008年8月8日
+        MyTimt t1 = new Mytime(2008,8,8);//MyTimt t1 = Ox888
+        MyTimt t2 = new Mytime(2008,8,8);//MyTimt t2 = Ox999
+
+        //测试以下，比较两个对象是否相等，能不能使用“==”
+        //这里的“==”判断的是：t1中保存的对象内存地址和t2中保存的对象内存地址是否相等
+        System.out.println(t1==t2);//false
+
+        //重写object equals方法之前
+        Boolean b = t1.eqauls(t2);
+        System.out.println(b)
+    }
+}
 
 
+class MyTime{
+    int year;
+    int month;
+    int day;
 
+    public MyTime(){
+
+    }
+
+    public MyTime(int year,int month,int day){
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    //重写object类的equals方法
+    public boolean equals(Object obj){
+        //获取第一个日期的年月日
+        int year1=this.year;
+        int month1 = this.month;
+        int day1= this.day;
+
+        if(obj instanceof MyTime){
+            MyTime t = (MyTime)obj;
+            int year2 = t.year;
+            int month2 = t.month;
+            int day2 = t.day;
+            if(year1==year2&&month1==month2&&day1==day2){
+                return true;
+            }
+        }
+        return false;
+
+    }
+}
