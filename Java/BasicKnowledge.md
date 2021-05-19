@@ -3560,38 +3560,223 @@ public class Test02{
 }
 
 
-class MyTime{
-    int year;
-    int month;
-    int day;
+import java.util.Objects;
 
-    public MyTime(){
+public class MyTime {
+    private int year;
+    private int month;
+    private int day;
 
+    public MyTime() {
     }
 
-    public MyTime(int year,int month,int day){
+    public MyTime(int year, int month, int day) {
         this.year = year;
         this.month = month;
         this.day = day;
     }
 
-    //重写object类的equals方法
-    public boolean equals(Object obj){
-        //获取第一个日期的年月日
-        int year1=this.year;
-        int month1 = this.month;
-        int day1= this.day;
+    public int getYear() {
+        return year;
+    }
 
-        if(obj instanceof MyTime){
-            MyTime t = (MyTime)obj;
-            int year2 = t.year;
-            int month2 = t.month;
-            int day2 = t.day;
-            if(year1==year2&&month1==month2&&day1==day2){
-                return true;
-            }
-        }
-        return false;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    @Override
+    public String toString() {
+        return "MyTime{" +
+                "year=" + year +
+                ", month=" + month +
+                ", day=" + day +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MyTime myTime = (MyTime) o;
+        return year == myTime.year &&
+                month == myTime.month &&
+                day == myTime.day;
+    }
+}
+```
+
+## Date类  
+
+### Date
+
+java.util.Date：表示日期和时间的类  
+类 Date 表示特定的瞬间。精确到毫秒  
+毫秒：千分之一 1000毫秒=1秒  
+
+毫秒值的作用：可以对时间和日期进行计算  
+2099-01-03 到 2088-01-01 中间一共有多少天  
+可以日期转换为毫秒进行计算，计算完毕，在把毫秒转换为日期  
+
+把日期转换为毫秒：  
+当前日期：2088-01-01  
+时间原点：1970-1-1日00：00：00（英国格兰时间）  
+中国属于东八区，时间增加8个小时   
+1970-1-1日08：00：00  
+
+把毫秒转换为日期：  
+1天=24*60*60=86400秒=86400000毫秒  
+
+```java
+import java.util.Date;
+
+public class Demo02Date {
+    public static void main(String[] args) {
+        demo01();
+        demo02();
+    }
+
+    private static void demo01() {
+        //返回从原点以来Date对象表示的毫秒数
+        Date date = new Date();
+        long time =date.getTime();
+        System.out.println(time);//1621395350758
+    }
+
+    private static void demo02(){
+        //输出现在的时间
+        Date date = new Date();
+        System.out.println(date);//Wed May 19 11:35:50 CST 2021
+
+        //毫秒转化日期
+        date = new Date(1621395350758L);
+        System.out.println(date);////Wed May 19 11:35:50 CST 2021
+    }
+    
+}
+```
+
+### DateFormat类  
+
+java.text.DateFormat:是日期/时间格式化子类的抽象类  
+
+作用：  
+    格式化（也就是日期->文本）、解析（文本->日期）  
+成员方法：  
+    String format(Date date) 按照指定的模式，把Date日期格式化为符合模式的字符串  
+    Date parse(String source) 把符合模式的字符串，解析为Date日期  
+
+DateFormat类是一个抽象类，无法直接创建对象，可以使用DateFormat的子类  
+
+构造方法：  
+SimpleDateFormat（String pattern）  
+String pattern：传递指定的模式：  
+例如：yyyy-MM-dd HH:mm:SS  
+注意：字母区分大小写，字母不能改，但是连接模式可以改  
+
+```java
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.SimpleTimeZone;
+
+public class DateFormat {
+    public static void main(String[] args)throws ParseException {
+        demo01();
+        demo02();
+    }
+    private static void demo02() throws ParseException {
+        //1、创建simpleDateFormat对象，构造方法中传递指定的模式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+        //2、调用SimpleDateFormat对象中parse。解析成Date日期
+
+        Date s = sdf.parse("2088年08月08日 16时14分54秒");
+        System.out.println(s);
+    }
+    private static  void demo01(){
+        //1、创建simpleDateFormat对象，构造方法中传递指定的模式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+        //2、调用simpleDateFormat对象的方法format，按照构造方法中指定的模式，把date日期格式化成字符串
+        Date date = new Date();
+        String d = sdf.format(date);
+        System.out.println(date);
+        System.out.println(d);
 
     }
 }
+```
+
+### Calendar类  
+
+Calendar类的常用方法：  
+public int get(int field):返回给定日历字段的值  
+public void set(int field,int value);给定的日历字段设置为给定值  
+public abstract void add(int field,int amount);根据日历的规划，为给定日历字段添加或减去指定的时间量  
+public Date getTime();返回一个表示Calendar时间值的Date对象   
+
+```java
+import java.util.Calendar;
+import java.util.Date;
+
+public class Demo01Calendar {
+    public static void main(String[] args) {
+        demo01();
+        demo02();
+        demo03();
+        demo04();
+    }
+
+    private static void demo04() {
+        Calendar c = Calendar.getInstance();
+        Date date = c.getTime();
+        System.out.println(date);
+    }
+
+    private static void demo03() {
+
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR,12);
+
+        int year = c.get(Calendar.YEAR);
+        System.out.println(year);
+
+    }
+
+    //set方法，将给定的日历字段设置给定值
+    private static void demo02() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR,9999);
+        int year = c.get(Calendar.YEAR);
+        System.out.println(year);
+        //同时设置年月日，可以使用set的重载方法
+        c.set(9999,8,8);
+    }
+
+    //get方法，返回给定日历的字段的值
+    private static void demo01() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        System.out.println(year);
+
+    }
+}
+```
+
+
+
+
