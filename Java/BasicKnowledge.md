@@ -3750,11 +3750,7 @@ public class Demo01Calendar {
     private static void demo03() {
 
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR,12);
-
-        int year = c.get(Calendar.YEAR);
-        System.out.println(year);
-
+        c.add(Calendar.YEAR,12);t
     }
 
     //set方法，将给定的日历字段设置给定值
@@ -3776,6 +3772,387 @@ public class Demo01Calendar {
     }
 }
 ```
+
+## System类  
+
+java.lang.System类中提供了大量的静态方法，可以获取与系统相关的信息，或者操作   
+
+常见方法：   
+1、public static long currentTimeMillis();返回以毫秒为单位的当前时间  
+2、public static void arraycopy(object src,int srcPos,object dest,int destPos,int length):   
+将数组中指定的数据拷贝到另一个数组
+
+名词|名词解释  
+----|:------  
+src|源数组  
+dest|目标数组  
+srcPos|目标数据中的起始位置   
+length|要复制的数组元素数量  
+
+
+```java
+import java.util.Arrays;
+
+public abstract class Demo01System
+{
+
+    public static void main(String[] args) {
+        demo01();
+        demo02();
+    }
+
+
+    //public static long currentTimeMillis()返回以毫秒为单位的当前时间
+    //验证for循环打印数字1-9999所需要的时间
+    private static void demo01() {
+        long s= System.currentTimeMillis();
+
+        for(int i=1;i<=9999;i++){
+            System.out.println(i);
+        }
+        long e = System.currentTimeMillis();
+        System.out.println("输出的毫秒值为"+(e-s));
+    }
+    private static void demo02() {
+        //定义一个源数组
+        int[] src = {1,2,3,4,5};
+        //定义一个目标数组
+        int[] dest = {7,8,9,10,11};
+        System.out.println("复制前"+ Arrays.toString(dest));
+        System.arraycopy(src,0,dest,0,3);
+        System.out.println("复制前"+ Arrays.toString(dest));
+    }
+}
+
+```
+
+## StringBuilder类  
+
+String类：的字符串是常量，它们的值在创建后不能更改，因为字符串的底层是一个final修饰的数组，不能改变，是一个常量   
+
+StringBuilder类：字符串缓冲区，可以提高字符串的操作效率(看成是一个长度可以变化的字符串)，底层也是一个数组，但是没有final修饰，超出容量自动扩容  
+
+### 常用方法：  
+
+public StringBuilder append(...);  
+添加任意数据的字符串形式，并返回当前对象自身
+
+```java
+public class Demo02StringBuilder {
+    public static void main(String[] args) {
+        //创建StringBuilder对象
+        StringBuilder bu = new StringBuilder();
+        //使用append方法往StringBuilder中添加数据
+        //append方法返回的是this，调用方法的对象是bu，this==bu
+        StringBuilder bu2 = bu.append("abc");//把bu的地址值给了bu2
+        System.out.println(bu);
+        System.out.println(bu2);
+        System.out.println(bu==bu2);
+
+        StringBuilder bu1 = new StringBuilder();
+        bu1.append("abc").append(1).append(true).append("中");
+        System.out.println(bu1);
+    }
+}
+```
+
+toString方法：可以StringBuilder和String相互转换  
+
+String->StringBuilder可以使用Stringbuilder的构造方法   
+StringBuilder-》String：用toString  
+
+```java
+
+public class Demo1toString {
+    public static void main(String[] args) {
+        //String->StringBuilder
+        String src = "hello";
+        System.out.println("src:"+src);
+        StringBuilder bu = new StringBuilder(src);
+        bu.append("world");
+        System.out.println("bu"+bu);
+
+        //StringBuilder->String
+        String s = bu.toString();
+        System.out.println("S;"+s);
+    }
+}
+```  
+
+## 包装类  
+
+定义：  如果向要我们的基本数据类型像对象一样使用，就可以使用基本数据类型对应的包装类  
+
+### 装箱与拆箱  
+
+装箱：把基本数据类型的数据，包装到包装类中  
+构造方法：  
+   1、Integer(int value)构造一个新分配的Integer对象，它表示指定的int值   
+   2、Integer(String s)构造一个新分配的Integer，它表示String参数所指的int值 
+注意：传递的字符串，必须是基本数据类型，否则会抛出异常，“a“不行
+
+静态方法：  
+   1、static Integer valueOf(int i)返回一个表示指定的int值的Integer实例  
+   2、static Integer valueOf(String s)返回保存指定的String的值的Integer对象  
+
+拆箱：在包装类中取出基本数据类型的数据  
+
+成员方法：int intvalue()以int类型返回值integer的值   
+
+
+```java
+public class Demo01Integer {
+    public static void main(String[] args) {
+        Integer in1 = new Integer(1);
+        System.out.println(in1);
+
+        Integer in2 = new Integer("1");
+        System.out.println(in2);
+
+        Integer in3 = Integer.valueOf(1);
+        System.out.println(in3);
+
+        Integer in4 = Integer.valueOf("1");
+        System.out.println(in4);
+
+        int in5 = in1.intValue();
+        System.out.println(in5);
+    }
+}
+```
+
+### 自动装箱和自动拆箱   
+
+自动装箱和自动拆箱：基本数据类型和包装类之间可以自动的相互转换  
+
+```java
+import java.util.ArrayList;
+
+public class Demo02Integer {
+    public static void main(String[] args) {
+        /*
+        自动装箱：直接把int类型的整数赋值给包装列
+        Integer in =1；相当于Integer in = new Integer(1);
+        */
+        Integer in =1;
+
+        /*
+        自动拆箱：in是包装类，无法直接参与运算，可以自动转换为基本数据类型，在进行计算
+        in+2;就当作in.invalue()+2=3
+         */
+        in = in+2;
+
+        ArrayList<Integer> list = new ArrayList<>();
+        //ArrayList集合无法直接存储整数，可以存储Integer包装类
+        list.add(1);//-->自动装箱 list.add(new Integer(1));
+        int a = list.get(0);//-->自动拆箱 list.get(0).invalue();
+    }
+}
+```
+
+### 基本类型与字符串类型之间的转换  
+
+基本类型->字符串（String）  
+1、基本类型的值+"" 最简单的方法（工作中常用）   
+2、包装类的静态方法toString（参数）  
+3、String类的静态方法valueOf（参数）  
+
+字符串->基本类型  
+使用包装类的静态方法parseXXX("字符串");
+Integer类：static int parseInt(String s)
+Doublr类：static double parseDouble(String s)  
+
+```java
+public class Demo02Intege {
+    public static void main(String[] args) {
+        //基本类型->字符串（String)
+        int i1= 100;
+        String s1 = i1+"";
+        System.out.println(s1+200);//100200
+
+        String s2 = Integer.toString(i1);
+        System.out.println(s2);
+
+        String s3 = String.valueOf(i1);
+        System.out.println(s3);
+
+        //字符串->基本类型
+        int i = Integer.parseInt(s1);
+        System.out.println(i);
+
+        int a = Integer.valueOf("a");//NumberFormatException
+        System.out.println(a);
+    }
+}
+```
+
+## colletion集合
+
+collection是单列集合类的根接口，用于存储一系列符合某种规则的元素，它有两个重要的子接口，分别是java.util.list 和java.util.set。其中list的特点是元素有序，元素可重复。  
+
+set的特点是元素无序，而且不可重复。  
+list的特点是元素有序，元素可重复  
+
+![collection](file:///C:/Users/Administrator/Desktop/QQ%E5%9B%BE%E7%89%8720210524101550.jpg)  
+
+
+### 集合的常用功能  
+
+java.util.collection接口   
+    所有单列的集合的最顶层的接口，里面定义了所有单列集合的共性方法   
+    任意的单列集合都可以使用Collection接口中的方法  
+
+共性的方法有：   
+
+1、public boolean add<E>:把给定的对象添加到当前集合  
+2、public void clear():清空集合所有的元素  
+3、public boolean remove(E e):被给定的对象在当前集合中删除  
+4、public boolean contains(E e);判断当前集合是否包含给定对象  
+5、public boolean isEmpty();判断当前集合是否为空  
+6、public int size();返回集合中元素的个数   
+7、public Object[] toArray;把集合中的元素，存储到数组中   
+
+```java
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class Demo02Coleection {
+    public static void main(String[] args) {
+        //创建集合对象
+        Collection<String> coll = new ArrayList<>();
+        System.out.println(coll);//重写了toString方法
+
+        //public boolean add<E>:把给定的对象添加到当前集合
+        boolean s1 = coll.add("张三");
+        System.out.println("s1:"+s1);
+        coll.add("赵四");
+        coll.add("王五");
+        coll.add("李六");
+        System.out.println(coll);
+
+        /*public void clear():清空集合所有的元素
+        返回值是一个boolean值，集合中存在元素，删除元素，返回true
+                               集合中不存在元素，删除失败，返回false
+         */
+        boolean s2 = coll.remove("赵四");
+        System.out.println("s2:"+s2);
+        boolean s3 = coll.remove("李四");
+        System.out.println("s3:"+s3);
+        System.out.println(coll);
+
+        //public boolean contains(E e);判断当前集合是否包含给定对象 ,包含true，不包含false
+        boolean s4 = coll.contains("赵四");
+        System.out.println("s4:"+s4);
+
+        //public boolean isEmpty();判断当前集合是否为空
+        boolean s5 = coll.isEmpty();
+        System.out.println("s5:"+s5);
+
+        //public int size();返回集合中元素的个数
+        int s6 = coll.size();
+        System.out.println("s6"+s6);
+
+        //public Object[] toArray;把集合中的元素，存储到数组中
+        Object[] arr = coll.toArray();
+        for (int i = 0; i <arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+
+        //public void clear():清空集合所有的元素  
+        coll.clear();
+        System.out.println(coll);
+    }
+}
+```
+
+
+### iterater接口  
+
+java.util.Iterator接口：迭代器(对集合进行遍历)  
+
+两个常用的方法：  
+* Boolean hasNext()如果仍有元素可以迭代，则返回true。  
+判断集合中还有没有下一个元素，有就返回true，没有则返回false  
+* E Next()返回迭代的下一个元素  
+取出集合中的下一个元素  
+
+Iterator迭代器，是一个接口，我们无法直接使用，需要使用Iterator接口的实现类对象，获取实现类的方式比较特殊  
+
+迭代器的使用步骤（重点）：  
+1、使用集合中的方法iterator()获取迭代器的实现对象，使用Iterator接口接收（多态）  
+2、使用Iterator接口中方法hasNext判断还有没有下一个元素  
+3、使用Iterator接口中的方法next取出集合中的下一个元素   
+
+```java
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+public class demo02Iterator {
+    public static void main(String[] args) {
+        Collection<String> coll = new ArrayList<>();
+        coll.add("张三");
+        coll.add("赵四");
+        coll.add("王五");
+        coll.add("李六");
+        //1\使用集合中的方法iterator()获取迭代器的实现对象，使用Iterator接口接收（多态）
+        Iterator<String> it = coll.iterator();
+        //2、使用Iterator接口中方法hasNext判断还有没有下一个元素
+        //3、使用Iterator接口中的方法next取出集合中的下一个元素   
+        while (it.hasNext()){
+            System.out.println(it.next());
+        }
+    }
+}
+```
+
+### 增强for循环  
+
+增强for循环：底层使用的也是迭代器，使用for循环的格式，简化了迭代器的书写  
+collection<E> etends Iterable<E>:所有的单列集合都可以使用增强for  
+public interface Iterable<T>实现这个接口允许对象成为“foreach”语句的目标  
+
+增强for循环：用来遍历集合和数组
+
+格式：  
+for(集合/数组的数据类型 变量名： 集合名/数组名){
+    sout(变量名);
+}  
+
+```java
+import java.util.ArrayList;
+
+public class Demo02For {
+    public static void main(String[] args) {
+        demo01();
+    }
+
+    private static void demo01() {
+        ArrayList<String > arr = new ArrayList<>();
+        arr.add("aaa");
+        arr.add("bbb");
+        arr.add("ccc");
+        arr.add("ddd");
+
+        for (String s :arr){
+            System.out.println(s);
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
