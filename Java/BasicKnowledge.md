@@ -2235,8 +2235,7 @@ public class demo{
 Random类用来生成随机的数字，使用起来也是三个步骤；  
 
 1、导包  
-import java.util.Random;  
-
+import java.util.Random;   
 2、创建  
 Random r = new Random();//小括号当中留空即可  
 
