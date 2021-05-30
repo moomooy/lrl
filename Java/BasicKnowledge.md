@@ -4140,6 +4140,239 @@ public class Demo02For {
 }
 ```
 
+## 泛型  
+
+### 泛型的概念  
+
+泛型是一种未知的数据类型，当我们不知道使用什么数据类型的时候，可以使用泛型，  
+* 泛型也可以看作是一个变量，用来接收数据类型  
+E e:Element 元素  
+T t：Type类型  
+
+* ArrayList集合在定义的时候，不知道集合中都会存在什么类型的数据，所以类型使用泛型E  
+
+创建集合的时候就会确定泛型的数据类型   
+
+### 使用泛型的好处  
+
+```java  
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
+public class Demo01Generic {
+    public static void main(String[] args) {
+        show02();
+    }
+
+    /*
+    创建集合对象，使用泛型
+    好处：
+    1、避免了类型转换的麻烦，存储的是什么类型，取出来的就是什么类型
+    2、把运行期异常(代码运行之后会抛出异常)，提升到了编译期（写代码的时候会报错）
+    弊端：
+    泛型是什么类型，只能存储什么类型
+     */
+    private static void show02() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("abc");
+
+        //使用迭代器遍历list集合
+        Iterator<String> obj = list.iterator();
+        while (obj.hasNext()){
+            String s = obj.next();
+            System.out.println(s);
+        }
+    }
+
+    private static void show01() {
+        ArrayList list = new ArrayList();
+        list.add("abc");
+        list.add(1);
+
+        //使用迭代器遍历list集合
+        //获取迭代器
+        Iterator it = list.iterator();
+        //使用迭代器中的方法hasNext和next遍历集合
+        while(it.hasNext()){
+            //取出元素也是Object类型
+            Object obj = it.next();
+            System.out.println(obj);
+
+            //想要使用String类特有的方法，length获取的字符串的长度，不能使用 多态 Object obj ="abc";
+            //需要向下转型
+            //会抛出classCastException类型转换异常，不能把Integer类型转换为String类型
+            String s =(String) obj;
+            System.out.println(s.length());
+        }
+    }
+}
+```
+
+### 定义和使用含有泛型的类  
+
+定义一个含有泛型的类，模拟ArrayList集合   
+泛型是一个未知的数据类型，当我们不确定什么什么数据类型的时候，可以使用泛型  
+泛型可以接收任意的数据类型，可以使用Integer，String，Student...   
+创建对象的时候确定泛型的数据类型  
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        //不写泛型默认为Object类型
+        GenericClass gc = new GenericClass();
+        gc.setName("只能是字符串");
+        Object obj = gc.getName();
+        
+        //创建GenericClass对象，泛型使用Integer类型  
+        GenericClass<Integer> gc1 =new GenericClass<>();
+        gc1.setName(1);
+        Object obj1 = gc1.getName();
+        
+    }
+}
+
+public class GenericClass<E> {
+    private E name;
+
+    public E getName(){
+        return name;
+    }
+
+    public void setName(E name){
+        this.name = name;
+    }
+}
+```
+
+### 定义和使用含有泛型的方法  
+
+泛型定义在方法的修饰符和返回值类型之间  
+
+格式：  
+    修饰符<泛型> 返回值类型 方法名 (参数列表(使用泛型)){
+        方法体；
+    }
+
+含有泛型的方法，在调用方法的时候确定泛型的数据类型  
+传递什么类型的参数，泛型就是什么类型  
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        GenericClass obj = new GenericClass();
+
+        obj.method1("abc");
+        obj.method1(1);
+        obj.method1(9.9);
+
+        obj.method("静态方法，不推荐创建对象使用");
+        
+        //静态方法，通过类名.方法名(参数)可以直接使用
+        GenericClass.method("静态方法");
+        GenericClass.method(1);
+    }
+}
+
+public class GenericClass {
+    //定义一个泛型的方法
+    public<M> void method1(M m){
+        System.out.println(m);
+    }
+
+    //定义一个静态方法
+    public static <A> void method(A a){
+        System.out.println(a);
+    }
+}
+```
+
+### 定义和使用含有泛型的接口  
+
+含有泛型的接口：  
+* 第一种使用方式：定义接口的实现，实现接口，指定接口的泛型  
+* 第二种使用方式：接口使用什么泛型，实现类就使用什么泛型，类跟着接口走  
+相当于定义了一个含有泛型的类，创建对象的时候确定泛型的类型  
+
+```java
+public interface GenericInterface<I> {
+    public abstract void method(I i);
+}
+
+//第一种方式
+public class GenericInterfacempl implements GenericInterface<String> {
+
+    @Override
+    public void method(String s) {
+        System.out.println(s);
+    }
+}
+
+//第二种方式
+public class GenericInterfacempl2<I> implements GenericInterface<I> {
+
+    @Override
+    public void method(I i) {
+        System.out.println(i);
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        GenericInterfacempl gi1 = new GenericInterfacempl();
+        gi1.method("nihao");
+
+        GenericInterfacempl2<Integer> gi2 = new GenericInterfacempl2();
+        gi2.method(2);
+    }
+}
+```
+
+
+### 泛型通配符 
+
+？：代表任意的数据类型  
+使用方式：  
+* 1、不能创建对象使用  
+* 2、只能作为方法的参数使用  
+
+```java 
+public class Demo05{
+    pubic static void main(String args){
+        ArrayList<Integer> list01 = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+
+        ArrayList<Integer> list02 = new ArrayList<>();
+        list02.add("a");
+        list02.add("b");
+            }
+
+    //定义一个方法，能遍历所有类型的ArrayList集合  
+    //这个时候我们不知到ArrayList集合使用什么数据类型，可以泛型的通配符？来接收数据类型   
+
+    public static void printArray(ArrayList<?> list){
+        //使用迭代器遍历集合
+        Interator<?> it = new Interator();
+        while(it.hasNext()){
+            //it.next()方法取出的元素是object，可以接收任意类型  
+            object obj = it.next();
+            System.out.println(o)
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
