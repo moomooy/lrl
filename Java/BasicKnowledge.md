@@ -4361,31 +4361,317 @@ public class Demo05{
         }
     }
 }
+```  
+
+## list集合  
+
+java.util.list接口  extends collection接口  
+
+list接口的特点：  
+1、有序的集合，存储元素和取出元素的顺寻是一致的（存储123 取出123）  
+2、有索引，包含了一些带索引的方法  
+3、允许存储重复的元素  
+
+list接口带索引的方法（特有）  
+* public void add(int index,E element);将指定的元素，添加到该集合中的指定位置。  
+* public E get(int index);返回集合中指定位置的元素  
+* public E remove(int index);移除列表中指定位置，返回的是被移除的元素  
+* public E set(int index,E element);用指定元素替换集合中指定位置的元素，返回值大的更新的元素  
+
+
+注意：  
+    操作索引的时候，一定要防止索引越界异常  
+    IndexOutOfBoundsException:索引越界异常，集合会报  
+    ArrayIndexOutOfBoundException；数组索引引越界异常  
+    StringIndexOutOfBoundsException;字符串索引越界异常  
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Demo01List {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+
+        list.add(2,"ele");
+        System.out.println(list);//[a,b,ele,c]
+
+        //remove移除
+        list.remove(3);
+        System.out.println(list);//[a,b,ele]
+
+        list.set(0,"aaa");
+        System.out.println(list);//[aaa,b,ele]
+
+        //list集合遍历有3种方式
+        //使用普通的for循环
+        for (int i = 0; i <list.size() ; i++) {
+            String s = list.get(i);
+            System.out.println(s);
+        }
+        System.out.println("=============");
+
+        //使用迭代器
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()){
+            String s = it.next();
+            System.out.println(s);
+        }
+        System.out.println("=============");
+
+        //使用增强for
+        for(String s:list) {
+            System.out.println(s);
+        }
+    }
+}
 ```
 
+### Arraylist集合  
 
+java.util.ArrayList集合的底层是一个数组结构  
+* 查询快，增删慢  
 
+### LinkedList集合   
 
+java.util.LinkedList集合 implement List接口  
+LinkedList集合的特点：  
+      1.底层是一个链表结构：查询慢，增删快  
+      2、里面包含了大量操作首尾元素的方法  
+ * 注意：使用Linked集合特有的方法，不能使用多态  
 
+ - public void addFirst(E e);将指定元素插入此列表的开头  
+ - public void addLast(E e);将指定元素添加到此列表的结尾  
+ - public E getFirst();返回此列表的第一个元素  
+ - public E getLast();返回此列表的最后一个元素  
+ - public E removeFirst();移除并返回次列表的第一个元素   
+ - public E removeLast();移除并返回此列表的最后一个元素  
+ - public E pop();从此列表所表示的堆栈处弹出一个元素  
+ - public void push(E e);将元素推出此列表所表示的堆栈  
+ - public Boolean isEmpty();如果列表不包含元素，则返回true 
 
+```java
+import java.util.LinkedList;
 
+public class Demo03LinkedList {
+    public static void main(String[] args) {
+        show02();
+    }
+    /*
+    public E removeFirst();移除并返回次列表的第一个元素
+ - public E removeLast();移除并返回此列表的最后一个元素
+ - public E pop();从此列表所表示的堆栈处弹出一个元素
+     */
+    private static void show03() {
+        LinkedList<Object> listt = new LinkedList<>();
+        listt.add("a");
+        listt.add("b");
+        listt.add("c");
+        System.out.println(listt);
 
+        System.out.println(listt.removeFirst());
+        System.out.println(listt.removeLast());
+    }
 
+    /*
+    public E getFirst();返回此列表的第一个元素
+ - public E getLast();返回此列表的最后一个元素
+     */
+    private static void show02() {
+        LinkedList<Object> listt = new LinkedList<>();
+        listt.add("a");
+        listt.add("b");
+        listt.add("c");
+        System.out.println(listt);
+        //listt.clear();
+        if (!listt.isEmpty()) {
 
+            System.out.println(listt.getFirst());
+            System.out.println(listt.getLast());
+        }
+    }
 
+            /*
+        public void addFirst(E e);将指定元素插入此列表的开头
+        public void addLast(E e);将指定元素添加到此列表的结尾
+        public void push(E e);将元素推出此列表所表示的堆栈,和addFirst作用一样
+        */
 
+    private static void show01() {
+        LinkedList<Object> listt = new LinkedList<>();
+        listt.add("a");
+        listt.add("b");
+        listt.add("c");
+        System.out.println(listt);
 
+        listt.addFirst("www");
+        listt.addLast("lll");
+        System.out.println(listt);
+    }
+}
+```
 
+### vector集合  
 
+vector集合底层是一个数组  
 
+## set接口  
 
+java.util.set接口 extends collection接口  
 
+set特点：  
+1、不允许存储重复元素  
+2、没有索引，没有带索引的方法，也不能使用普通的for循环遍历  
 
+### HashSet集合  
 
+java.util.HashSet集合 implement Set接口  
+HashSet特点：  
+1、不允许存储重复的元素  
+2、没有索引，没有带索引的方法，也不能使用普通的for循环遍历  
+3、是一个无序的集合，存储元素和取出元素的顺序有可能不一致  
+4、底层是一个哈希表结构（查询速度非常的快）  
 
+```java
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
+public class HashMa {
+    public static void main(String[] args) {
+        Set<Integer> set = new HashSet<>();
+        set.add(1);
+        set.add(2);
+        set.add(3);
+        set.add(1);
 
+        Iterator<Integer> it = set.iterator();
+        while (it.hasNext()){
+            Integer i = it.next();
+            System.out.println(i);
+        }
+    }
+}
+```
 
+### 什么是哈希值  
 
+哈希值：是一个十进制的整数，由系统随机给出  
+（就是对象的地址值，是一个逻辑地址，模拟出来的地址，不是数据实际存储的物理地址）  
 
+在object类有一个方法，可以获取对象的哈希值   
+int hashCode() 返回该对象的哈希码值。  
+hashCode方法的源码：  
+* public native int hashCode();
+native：代表该方法调用的是本地操作系统的方法  
 
+```java
+public class HashCOde {
+    public static void main(String[] args) {
+        Person p1 = new Person();
+        int t1 = p1.hashCode();
+        System.out.println(t1);//460141958
+
+        /*
+        toString方法的源码：
+        retutn getClass().getName()+"@"+Integer.toHexString(hashCode());
+         */
+        System.out.println(p1);//Demo03.Person@1b6d3586
+
+        /*
+        String类的哈希值
+        String类重写Object类的hashCode值
+         */
+        String s1 = new String("abc");
+        System.out.println(s1.hashCode());//96354
+    }
+}
+```
+
+### HashSet集合存储数据的结构  
+
+HashSet集合存储数据的结构（哈希表）  
+
+JDK1.8版本之前：哈希表 = 数组+链表；  
+JDK1.8版本之后：  
+哈希表 = 数组 + 链表；  
+哈希表 = 数组 + 红黑树（提高查询的速度）  
+
+数据结构：，存储数据到集合中，先计算元素的哈希值，把元素进行了分组（相同哈希值的元素是一组）  
+链表/红黑树结构把相同哈希值的元素连接到一起
+* 如果链表的长度超过了8位，那么链表结构转换为红黑树（提高查询速度）  
+
+### Set集合存储元素不重复的原理  
+
+Set集合在调用add方法的时候，add方法会调用元素的hashCode方法和equals方法，判断元素是否重复  
+
+add方法会调用s1方法hashCode方法，计算字符串的哈希值，在集合中找是否有哈希值  
+* 1、如果没有，就会把s1方法存储到集合中  
+* 2、如果有哈希冲突，会调用equals方法和哈希值相同的元素进行比较（s2.equals（s1)  
+* a.如果返回true，两个元素的哈希值相同，equals方法返回true，认定两个元素相同，就不会存储    
+* b.如果返回false，两个元素的哈希值不同，equals方法返回false，认定两个元素不同，就会把元素存储到集合中  
+
+注意：set集合存储元素不重复的元素，前提是存储的元素重写hashCode方法和equals方法  
+
+### HashSet存储自定义类型元素  
+
+HashSet存储自定义类型元素  
+
+Set集合报错元素唯一：  
+存储的元素（String，Integer，...，Student，Person），必须重写hashCode方法和equals方法  
+
+要求：同名同年龄的人，视为同一个人，只能存储一次  
+
+```java
+public class HashCOde {
+    public static void main(String[] args) {
+        //创建HashSet集合存储Person
+        HashSet<Person> set = new HashSet<>();
+        Person  p1 = new Person("小熊",18);
+        Person  p2 = new Person("小熊",18);
+        Person  p3 = new Person("小熊",19);
+        
+        System.out.println(p1.hashCode());
+        System.out.println(p2.hashCode());
+
+        System.out.println(p1==p2);
+        System.out.println(p1.equals(p2));
+        set.add(p1);
+        set.add(p2);
+        set.add(p3);
+        System.out.println(set);
+
+    }
+}
+```
+
+### LinkedHashSset集合  
+
+java.util.LinkedHashSet集合  extends HashSet集合  
+
+LinkedHashSet集合特点：  
+底层是一个哈希表(数组+链表/红黑树)+链表：多了一条链表（记录元素的存储顺序），保证元素有序  
+
+```java
+public class Demo04{
+    public static void main(String[] args){
+        HashSet<String> set = new HashSet<>();
+        set.add("abc");
+        set.add("www");
+        set.add("abc");
+        set.add("itcase");
+        System.out.println(set)；
+    
+    LinkHashSet<String> Linkes= new LinkedHashSetc<>();
+        set.add("abc");
+        set.add("www");
+        set.add("abc");
+        set.add("itcase");
+        System.out.println(set)；
+    }
+}

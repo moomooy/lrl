@@ -29,7 +29,7 @@ public class BubbleSort {
         int count=1;
         boolean isSorted=false;
         for (int i = 0; i < arr.length - 1; i++) {//外循环只需要比较arr.length-1次就可以了
-            if(isSorted)return;
+            if(！isSorted)return;
             for (int j = 0; j < arr.length - 1 - i; j++) {//-1为了防止索引越界,-i为了提高效率
                 System.out.println("第" + count + "次循环");
                 count++;
@@ -55,6 +55,45 @@ public class BubbleSort {
     }
 
 }
+```
+
+```java
+public class sort {
+
+        public static void main(String[] args) {
+            int[] arr = {24,69,80,57,13};
+            bubbleSort(arr);
+            print(arr);
+        }
+
+
+        public static void bubbleSort(int[] arr) {
+            int count=1;
+            boolean isSorted ;
+            for (int i = 0; i < arr.length - 1; i++) {//外循环只需要比较arr.length-1次就可以了
+
+                isSorted = true;
+                for (int j = 0; j < arr.length - 1 - i; j++) {//-1为了防止索引越界,-i为了提高效率
+
+                    if (arr[j] > arr[j + 1]) {
+                        int temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                        isSorted = false;
+                        System.out.println("第" + count + "次打印" + Arrays.toString(arr));
+                        count++;
+                    }
+                }
+                if(isSorted)return;
+            }
+        }
+        public static void print(int[] arr) {
+            for (int i = 0; i < arr.length; i++) {
+                System.out.print(arr[i] + " ");
+            }
+        }
+
+    }
 ```
 
 ## 快速排序法
