@@ -4674,4 +4674,177 @@ public class Demo04{
         set.add("itcase");
         System.out.println(set)；
     }
+}  
+```
+
+### 可变参数  
+
+可变参数：是JDK1.5之后出现的新特性  
+使用前提：  
+当方法的参数列表数据类型已经确定，但是参数的个数不确定，就可以使用可变参数  
+
+* 使用格式：定义方法时使用  
+修饰符  返回值类型  方法名（数据类型...变量名){}  
+
+可变参数的原理：  
+可变参数底层就是一个数组，根据传递参数个数不同，会创建不同长度的数组，来存储这些参数  
+传递的参数个数，就是0个（不传递），1，2，...多个  
+
+可变参数的注意事项：  
+1、一个方法的参数列表，只能有一个可变参数  
+2、如果方法的参数有多个，那么可变参数必须写在参数列表的末尾
+
+```java
+public class HashCOde {
+    public static void main(String[] args) {
+       int o = method(1,2,3);
+        System.out.println(o);
+    }
+    /*
+    可变参数的终极写法，可以传递任何数据类型的参数
+    public static void method(Object...obj){}
+    */
+    public static int method(int...arr) {
+        //arr底层是一个数组
+        int sum = 0;
+        for (int i : arr) {
+            sum = sum + i;
+        }
+        return sum;
+    }
 }
+```  
+
+## Collections集合工具类的方法  
+
+java.util.Collection是集合工具类，用来对集合进行操作的  
+
+### 添加和打乱顺序  
+
+public static <T> boolean addAll(Collection<T> c,T...elements);往集合中添加一些元素  
+public static void shuffle(List<?> list)打乱顺序；打扰集合顺序  
+
+```java
+public class HashCOde {
+    public static void main(String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        //public static <T> boolean addAll(Collection<T> c,T...elements);往集合中添加一些元素
+        Collections.addAll(list, "a","b","c","d","e");
+        System.out.println(list);
+        //public static void shuffle(List<?> list)打乱顺序；打扰集合顺序  
+        Collections.shuffle(list);
+        System.out.println(list);
+    }
+}
+```
+
+### 集合排序  
+
+public static <T> void sort(List<T> list);将集合中元素按照默认规则排序  
+
+注意：  
+sort(List<T> list)使用前提  
+被排序的集合里面存储的元素，必须实现Comparable，重写接口中的方法comparaTo定义排序的规则  
+
+Comparable接口的排序规则：  
+自己(this) - 参数；升序  
+
+```java
+public class HashCOde {
+    public static void main(String[] args) {
+        ArrayList<Integer> list01 = new ArrayList<>();
+        Collections.addAll(list01,1,5,3,4,2);
+        System.out.println(list01);
+        Collections.sort(list01);
+        System.out.println(list01);
+
+        ArrayList<String> list02 = new ArrayList<>();
+        Collections.addAll(list02,"a","c","b");
+        System.out.println(list02);
+        Collections.sort(list02);
+        System.out.println(list02);
+
+        ArrayList<Person> list03 = new ArrayList<>();
+        list03.add(new Person("张三",18));
+        list03.add(new Person("李四",15));
+        list03.add(new Person("王五",20));
+        Collections.sort(list03);
+        System.out.println(list03);
+     }
+}
+
+public class Person implements Comparable<Person> {
+    private String name;
+    private int age;
+
+    public Person() {
+    }
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return age == person.age &&
+                Objects.equals(name, person.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, age);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+
+    @Override
+    public int compareTo(Person o) {
+        //return 0;认为元素都相同
+        //自定义比较的规则，比较两个人的年龄(thid,参数Person）
+        return this.getAge() - o.getAge();
+    }
+}
+``` 
+
+### 规则排序  
+
+java.util.Collection是集合工具类，用来对集合进行操作，部分方法如下：  
+* public static <T> void sort(List<T> list,Comparator<? suer T>);将集合中元素按照指定规则排序  
+
+Comparable和Comparator的区别  
+Comparable：自己（this）和别人(参数)比较，自己需要实现Comparable接口，重写比较的规则compareTo方法  
+Comparator：想当于找一个第三方的裁判，比较两个  
+
+* Comparator的排序规则：o1-o2：升序，反之降序  
+
+
+
+
