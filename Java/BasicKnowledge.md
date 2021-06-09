@@ -4845,6 +4845,743 @@ Comparator：想当于找一个第三方的裁判，比较两个
 
 * Comparator的排序规则：o1-o2：升序，反之降序  
 
+```java
+
+public class HashCOde {
+    public static void main(String[] args) {
+        ArrayList<Integer> list01 = new ArrayList<>();
+        Collections.addAll(list01,1,5,3,4,2);
+        System.out.println(list01);
+        Collections.sort(list01, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1-o2;
+            }
+        });
+        System.out.println(list01);
+
+        ArrayList<Person> list02 = new ArrayList<>();
+        list02.add(new Person("张三",18));
+        list02.add(new Person("李四",15));
+        list02.add(new Person("王五",5));
+        Collections.sort(list02, new Comparator<Person>() {
+            @Override
+            public int compare(Person o1, Person o2) {
+                return o1.getAge()-o2.getAge();
+            }
+        });
+        System.out.println(list02);
+     }
+}
+
+public class Person{
+    private String name;
+    private int age;
+
+    public Person() {
+    }
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return age == person.age &&
+                Objects.equals(name, person.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, age);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+}
+```
+
+## Map集合  
+
+java.util.Map<k,v>集合  
+Map集合的特点：  
+&emsp;1、Map集合是一个双列集合，一个元素包含两个值(一个key，一个value)  
+&emsp;2、Map集合中的元素，key和value的数据类型可以相同，也可以不同  
+&emsp;3、Map集合中的元素，key是不允许重复的，value是可以重复的  
+&emsp;4、Map集合中的元素，key和value是一一对应  
+
+java.util.HashMap<k.v> 集合 implements Map<k,v>接口  
+HashMap集合的特点：  
+1、HashMap集合底层是一个哈希表，查询速度特别快  
+&emsp;JDK1.8之前：数组+单向链表  
+&emsp;JDK1.8之后：数组+单向链表/红黑树（链表的长度超过8）：提高查询速度  
+2、hashmap集合是一个无序的集合，存储元素和取出元素的顺序有可能不一致  
+
+java.util.LinkedHashMap<k,v>集合  extends HashMap<k,v>集合  
+LinkedHashMap的特点：  
+&emsp;1、LinkedHashMap集合底层是一个哈希表+链表（保证迭代的顺序）  
+&emsp;2、LinkedHashMap集合是一个有序的集合，存储元素和取出元素的顺序是一致的  
 
 
+### Map接口的常用方法  
 
+public V put(k key, V value); 把指定的键与指定的值添加到Map集合中  
+public V remove(Object key);把指定的键所对应的键值对元素，在Map集合中删除，返回被删除的元素   
+public V get(Object key);根据指定的键，在Map集合中获取对应的值  
+Boolean containkey(Object key);判断集合中是否包含指定的值  
+
+```java
+public class MapDemo {
+    public static void main(String[] args) {
+        show04();
+    }
+/*
+Boolean containkey(Object key);判断集合中是否包含指定的值  
+包含返回true，不包含返回false
+ */
+    private static void show04() {
+        Map<String,String> map = new HashMap<>();
+        map.put("Bob","lisa");
+        map.put("Alice","Tom");
+        map.put("lily","rose");
+        boolean b1 = map.containsKey("lily");
+        System.out.println(b1);
+    }
+
+    /*
+    public V get(Object key);根据指定的键，在Map集合中获取对应的值
+    返回值：
+    key存在，返回对应的value值
+    key不存在，返回null
+     */
+    private static void show03() {
+        Map<String,String> map = new HashMap<>();
+        map.put("Bob","lisa");
+        map.put("Alice","Tom");
+        map.put("lily","rose");
+        String v5 = map.get("lily");
+        System.out.println(v5);
+        System.out.println(map);
+    }
+
+    /*
+    public V remove(Object key);把指定的键所对应的键值对元素，在Map集合中删除，返回被删除的元素
+    返回值：V
+    key存在，V返回被删除的值
+    key不存在，V返回null
+     */
+    private static void show02() {
+        Map<String,String> map = new HashMap<>();
+        map.put("Bob","lisa");
+        map.put("Alice","Tom");
+        map.put("lily","rose");
+        String v3 = map.remove("Bob");
+        System.out.println(v3);
+        System.out.println(map);
+    }
+
+    /*
+    public V put(k key, V value); 把指定的键与指定的值添加到Map集合中
+    返回值：v
+          存储键值对的时候，key不重复，返回值v是null
+          存储键值对的时候，key重复，会使用新的value替换map中重复的value，返回被替换的value值
+     */
+    private static void show01() {
+        //创建对象
+        Map<String,String> map = new HashMap<>();
+        String v1 = map.put("李晨", "范冰冰");
+        System.out.println(v1);
+        String v2 = map.put("李晨", "范冰冰01");
+        System.out.println(v2);
+
+        map.put("文章","杨迪");
+        System.out.println(map);
+    }
+}
+```
+
+### Map遍历键找值方式  
+
+Map集合的第一种遍历方式：通过键找值的方式  
+Map集合中的方法：  
+* set<k> keySet() 返回此映射中包含的键的set视图  
+实现步骤：  
+&ensp;1、使用Map集合中的方法keySet()，把Map集合所有的key取出来，存储到一个set集合中  
+&ensp;2、遍历set集合，获取Map集合中的每一个key  
+&ensp;3、通过Map集合中的方法get(key)，通过key找到value  
+
+```java
+public class MapDemo {
+    public static void main(String[] args) {
+        Map<String,Integer> map = new HashMap<>();
+        map.put("小赵",18);
+        map.put("小亮",13);
+        map.put("小罗",20);
+
+        Set<String> in = map.keySet();
+        Iterator<String> it = in.iterator();
+        while (it.hasNext()) {
+            String s = it.next();
+            Integer i = map.get(s);
+            System.out.println(s+"= "+i);
+        }
+
+        for (String s:in){
+            Integer value = map.get(s);
+            System.out.println(s+"="+value);
+        }
+    }
+}
+```
+
+### Map集合遍历键值对方式  
+
+Map集合遍历的第二种方式：使用Entry对象遍历  
+
+Map集合中的方法：  
+Set<Map.Entry<K,V>> entrySet()返回映射中包含的映射关系的Set视图  
+
+实现步骤：  
+1、使用Map集合中的方法entrySet(),把Map集合中多个Entry对象取出来，存储到一个Set集合中  
+2、遍历Set集合，获取每一个Entry对象  
+3、使用Entry对象中的方法getKey()和getValue()获取键与值  
+
+```java
+public class Demo03EntrySet
+{
+    public static void main(String[] args) {
+        Map<String,Integer> map = new HashMap<>();
+        map.put("赵丽颖",18);
+        map.put("余雨阳",21);
+        map.put("罗溶靓",20);
+
+        Set<Map.Entry<String, Integer>> set = map.entrySet();
+        Iterator<Map.Entry<String, Integer>> it = set.iterator();
+        while (it.hasNext()){
+            Map.Entry<String, Integer> Entry= it.next();
+            String key = Entry.getKey();
+            Integer value = Entry.getValue();
+            System.out.println("key"+key+"value"+value);
+        }
+    }
+}
+```
+
+### HashMap存储自定义类型键值  
+
+HashMap存储自定义类型的键值  
+Map集合保证key是唯一的：  
+作为key的元素，必须重写HashCode方法和equals方法，以保证key唯一  
+
+```java
+public class HashCOde {
+    public static void main(String[] args) {
+        show02();
+    }
+/*
+HashMap存储自定义类型的键值
+key：String类型
+     String类型重写hashCode和equals方法，可以保证key是唯一的
+value：Person类型
+     value可以重复，同名同年是为同一个人
+ */
+    private static void show02() {
+        //创建HashMap集合
+        HashMap<String,Person> map = new HashMap<>();
+        map.put("英国",new Person("女王",18));
+        map.put("中国",new Person("秦始皇",19));
+        map.put("日本",new Person("普京",22));
+
+        //使用keySet加增强for循环遍历Map集合
+        Set<String> set = map.keySet();
+        for (String key:set) {
+            Person value = map.get(key);
+            System.out.println("key"+key+"value"+value);
+        }
+    }
+/*
+HashMap存储自定义类型键值
+key：Person类型
+     Person类型就必须重写HashCode方法和equals方法，以保证key的唯一
+value：String类型
+     可以重复
+ */
+    private static void show01() {
+        //创建HashMap集合
+        HashMap<Person,String> map = new HashMap<>();
+        map.put(new Person("女王",18),"英国");
+        map.put(new Person("秦始皇",19),"中国");
+        map.put(new Person("普京",22),"日本");
+
+        //使用entrySet和增强for遍历Map集合
+        Set<Map.Entry<Person, String>> set = map.entrySet();
+        for (Map.Entry<Person,String> entry: set) {
+            Person key = entry.getKey();
+            String value = entry.getValue();
+            System.out.println("key"+key+"value"+value);
+        }
+
+    }
+}
+```
+
+### LinkedHashMap集合  
+
+java.util.LinkedHashMap<k,v> entends  HashMap<k,v>
+Map接口的哈希表和连接链表实现，具有可以预知的迭代顺序。  
+底层原理：  
+哈希表+链表(记录元素的顺序)  
+
+```java
+public class MapDemo {
+    public static void main(String[] args) {
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("小赵",18);
+        map.put("小亮",13);
+        map.put("小罗",20);
+        System.out.println(map);//key不允许重复，无序
+
+        LinkedHashMap<String,Integer>  Link = new LinkedHashMap<>();
+        Link .put("小赵",18);
+        Link .put("小亮",13);
+        Link .put("小罗",20);
+        System.out.println( Link );//key不允许重复，有序
+
+        }
+
+}
+```
+
+### Hashtable集合  
+
+java.util.Hashtable<k,v>集合  implement Map<k,v>接口  
+
+Hashtable：底层是一个哈希表，是一个线程安全的集合，是单线程集合，速度慢  
+HashMap：底层是一个哈希表，是一个线程不安全的集合，是多线程的集合，速度快  
+
+HashMap集合(之前学的所有集合)：可以存储null值，null键  
+* Hashtable集合，不能存储null值，null键  
+
+Hashtable和vector集合一样，再jdk1.2版本之后被更加先进的集合(HashMap和ArrayList)取代了  
+Hashtable的子类Properties依然活跃在历史舞台  
+Properties集合是一个唯一和IO流相结合的集合
+
+## 异常  
+
+### 异常分类  
+
+java.lang.Throwable：类是Java语言中所有错误或异常的超类  
+* Exception：编译期异常，进行编译(写代码)java程序出现的问题  
+* RuntimeException：运行期异常，java程序中出现的问题  
+异常就相当于程序得了一个小毛病(感冒，发烧)，把异常处理掉，程序可以继续执行(吃点药，继续革命工作)  
+
+Error：错误  
+错误就相当于程序得了一个无法治愈的毛病(非典，艾滋)，必须修改源代码，程序才能执行  
+
+```java
+public class Demo01Exception {
+    public static void main(String[] args) /*throws ParseException*/ {
+        //Exception：编译期异常，进行编译(写代码)java程序出现的问题
+        /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//用来格式化日期
+        Date date = null;
+        try {
+            date = sdf.parse("1999-0909");//把格式化的字符串的日期，解析为Date格式的日期
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(date);
+        */
+
+        //RuntimeException：运行期异常，java程序中出现的问题
+       /* int[] arr = {1,2,3};
+      //  System.out.println(arr[3]);
+        try{
+            //可能会出现异常的代码
+            System.out.println(arr[3]);
+        }catch (Exception e){
+            //异常的处理逻辑
+            System.out.println(e);
+        }
+*/
+
+       /* Error错误
+        OutOfMemoryError：java  heap  space
+        内存溢出的错误，创建的数组太大了，超出了jvm分配的内存
+        */
+       int[] arr = new int[10245*102458];
+       //必须修改代码，创建的数组小一点
+
+        System.out.println("后续代码");
+    }
+}
+```
+
+### 异常产生过程的解析   
+
+```java
+public class Demo01Exception {
+    public static void main(String[] args) /*throws ParseException*/ {
+       //创建int类型的数组，并且赋值
+        int[] arr = {1,2,4};
+        int e =get(arr,3);
+        System.out.println(e);
+    }
+
+    private static int get(int[] arr, int i) {
+        int ele = arr[i];
+        return ele;
+    }
+}
+```
+
+* 1、访问数组中的索引，而数组时没有3索引的，这时候，jvm就会检测出程序会出现异常  
+jvm会做两件事：  
+&emsp;1、JVM会根据异常产生的原因创建一个异常对象，这个异常对象包括了异常产生的(内容，原因，位置)  
+new ArrayIndexOutOfBoundsException("3");
+&emsp;2、在get方法中，没有异常的处理逻辑（try...Catch),那么JVM就会把异常对象抛出给方法的调用者main放来来处理这个异常  
+
+
+* 2、new ArrayIndexOutOfBoundsException("3");  
+
+main方法收到了这个异常对象，main方法也没有处理这个异常的处理逻辑  
+继续把对象抛出给main方法的调用者JVM处理  
+
+* 3、new ArrayIndexOutOfBoundsException("3");  
+
+JVM接收到了这个异常对象，做了两件事情  
+1、把异常对象(内容，原因，位置)以红色的字体打印在控制台  
+2、JVM会终止当前正在执行的Java程序--》中断 处理
+
+### Throw关键字  
+
+Throw关键字作用：  
+可以使用throw关键字在指定的方法中抛出指定的异常  
+
+使用格式：  
+throw  new  xxxException("异常产生的原因");  
+注意：  
+&emsp;1、throw关键字必须写在方法的内部  
+&emsp;2、throw关键字后边new的对象必须时Exception或者Exception的子类对象  
+&emsp;3、throw关键字抛出指定的异常对象，我们就必须处理这个异常对象  
+&emsp;&emsp;throw关键字后边创建的RuntimeException或者是RuntimeException的子类对象，我们可以不处理，默认交给JVM处理（打印异常对象，中断程序）  
+&emsp;&emsp;throw关键字后边创建的是编译异常（写代码的时候报错），我们就必须处理这个异常，要么throw，要么try...Catch  
+
+
+```java
+public class Demo01Exception {
+    public static void main(String[] args) {
+       // int[] arr = null;
+        int[] arr = new int[3]55;
+        int e = get(arr,3);
+        System.out.println(e);
+    }
+    /*
+    工作中我们首先必须对对方传递过来的参数进行合法性校验
+    如果参数不合法，那么我们就必须使用抛出异常的方式，告知方法的调用者，传递的参数有问题
+    注意：NullPointerException是一个运行期异常，我们不用处理，默认交给JVM处理
+     */
+    private static int get(int[] arr, int index) {
+        /*
+        我们可以对传递过来的参数数组，进行合法性的校验
+        如果数组arr的值是null
+        那么我们就抛出空指针异常，告知方法的调用者“传递的数组的值是null”
+         */
+        if(arr==null){
+            throw new NullPointerException("传递的数组的值是null");
+        }
+        /*
+        我们可以对传递过来的参数index进行合法的校验
+        如果index的范围不在数组的索引范围内
+        那么我们就抛出数组索引越界异常，告知方法的调用者"传递的索引超出了数组的使用范围"
+         */
+        if(index<0||index>arr.length-1){
+            throw new ArrayIndexOutOfBoundsException("传递的索引超出了数组的使用范围");
+        }
+        int ele = arr[index];
+        return ele;
+    }
+}
+```
+
+### Objects非空判断  
+
+Objects类中的静态方法  
+
+public static <T> T requireNonNull(T obj);查看指定引用对象不是null   
+
+```java
+public class Demo01Exception {
+    public static void main(String[] args) {
+        method(null);
+    }
+
+    private static void method(Object o) {
+        //对传递过来的参数进行合法性判断，判断是否为null
+        Objects.requireNonNull(o,"传递的对象的值是null" );
+    }
+}
+```
+
+### throw关键字异常处理  
+
+throw关键字：异常处理的第一种方式，交给别人处理  
+
+作用：  
+当方法内部抛出异常对象的时候，那么我们就必须处理这个异常对象  
+可以使用throw关键字处理异常对象，会把异常对象声明抛出给方法的调用者处理(自己不处理，给别人处理)，最终交给JVM处理-->中断处理  
+
+使用格式：在方法声明时使用  
+修饰符  返回值类型  方法名(参数列表)  throw  AAAException，BBBException...{
+    throw  new  AAAException("产生原因");
+     throw  new  BBBException("产生原因");
+     ...
+}
+
+注意：  
+1、throw关键字必须写在方法声明处  
+2、throws关键字后边声明的异常必须时是Exception或者是Exception的子类  
+3、方法内部如果抛出了多个异常对象，那么throw后边必须也声明多个异常   
+  如果抛出了多个异常对象有子父类关系，那么直接声明父类异常即可  
+4、调用了一个声明抛出异常的方法，我们就必须的处理声明的异常  
+要么继续使用throw声明抛出，交给方法的调用者处理，最终交给JVM  
+要么try...catch自己处理异常   
+
+
+```java
+public class Demo01Exception {
+        /*FileNotFoundException  extends  IOException
+        如果抛出的多个异常对象有子父类关系，那么直接声明父类异常即可
+        */
+        //public static void main(String[] args) throw FileNotFoundException,IOException{
+        public static void main(String[] args) throws IOException {
+            readFile("c:\\a.tx");
+        }
+
+        /*
+        定义一个方法，对传递的文件路径进行合法判断  
+        如果路径不是"c:\\a.txt",那么我们就抛出文件找不到异常，告知方法的调用者  
+        注意：  
+        FileNotFoundException是编译异常，抛出编译异常，就必须处理这个异常 
+        可以使用throw继续声明抛出FileNotFoundException这个异常对象，让方法的调用者处理
+        */
+        private static void readFile(String fileName) throws IOException {
+            if(!fileName.equals("c:\\a.txt")){
+                throw new FileNotFoundException("传递的文件路径不是c:\\a.txt");
+            }
+            /*
+            如果传递的路径，不是.txt结尾
+            那么我们就抛出异常对象，告知方法的调用者，文件的后缀名不对
+             */
+            if(!fileName.endsWith(".txt")){
+                throw new IOException("文件的后缀名不对");
+            }
+            System.out.println("路径没有问题，读取文件");
+        }
+}
+```
+
+
+### try-catch异常处理  
+
+try...catch:异常处理的第二种方式，自己处理异常   
+格式：  
+try{  
+可能产生异常的代码  
+}catch(定义一个异常的变量，用来接收try中抛出的异常对象){
+    异常的处理逻辑  
+    一般在工作中，会把异常的信息记录到一个日志中  
+}
+...  
+catch(异常类名  变量名){  
+     
+}  
+
+注意：  
+1、try中可能会抛出多个异常对象，那么就可以使用多个catch来处理这些异常对象   
+2、如果try中产生了异常，那么就会执行catch中的异常处理逻辑，执行完毕catch中的处理逻辑，继续执行try。。。catch之后的代码，如果try中没有产生异常，那么就不会执行catch中异常的处理逻辑，执行完try中的代码，继续执行之后的代码  
+
+
+```java
+public class Demo01Exception {
+        public static void main(String[] args) {
+            try {
+                readFile("c:\\a.tx");
+            }catch (IOException e){
+                System.out.println("catch-传递的文件后缀不是.txt");
+            }
+            System.out.println("后续代码");
+        }
+
+    /*
+       如果传递的路径，不是.txt结尾
+       那么我们就抛出异常对象，告知方法的调用者，文件的后缀名不对
+        */
+        private static void readFile(String fileName) throws IOException {
+            if(!fileName.endsWith(".txt")){
+                throw new IOException("文件的后缀名不对");
+            }
+            System.out.println("路径没有问题，读取文件");
+        }
+}
+```
+
+### throwable类中的三个异常处理的方法  
+
+throwable类中定义了3个异常处理的方法  
+String getMessage()返回此  throwable的简短描述  
+String toString()返回此  throwable的详细信息字符串  
+void  printStacktrace()  JVM打印异常对象，默认此方法，打印的异常信息是最全面的  
+
+### finally代码块  
+格式：
+try{  
+可能产生异常的代码  
+}catch(定义一个异常的变量，用来接收try中抛出的异常对象){
+    异常的处理逻辑  
+}finally{
+    无论是否出现异常都会被执行
+}  
+注意：  
+1、finally不能单独使用，必须和try一起使用  
+2、finally一般用于资源释放(资源回收)，无论程序是否出现异常，最后都要资源释放(IO)    
+
+* 如果finally有return语句，永远返回finally中的结果，避免该情况
+
+```java
+public class Demo01Exception {
+        public static void main(String[] args) {
+            try {
+                //可能会产生异常的代码
+                readFile("c:\\a.tx");
+            }catch (IOException e){
+                //异常的处理逻辑
+                e.printStackTrace();
+            }finally {
+                //无论是否出现异常，都会被执行
+                System.out.println("资源释放");
+            }
+        }
+
+    /*
+       如果传递的路径，不是.txt结尾
+       那么我们就抛出异常对象，告知方法的调用者，文件的后缀名不对
+        */
+        private static void readFile(String fileName) throws IOException {
+            if(!fileName.endsWith(".txt")){
+                throw new IOException("文件的后缀名不对");
+            }
+            System.out.println("路径没有问题，读取文件");
+        }
+}
+```  
+
+```java
+public class Demo01Exception {
+    public static void main(String[] args) {
+        int a = getA();
+        System.out.println(a);
+    }
+
+    private static int getA() {
+        int a= 10;
+        try {
+            return a;
+        }catch (Exception e){
+            System.out.println(e);
+        }finally {
+            //一定会执行
+            a =100;
+            return  a;
+        }
+    }
+
+}
+```
+
+
+### 异常的注意事项-捕获处理  
+
+* 1、多个异常分别处理  
+多个try多个catch
+* 2、多个异常一次捕获，多次处理  
+一个try多个catch，catch里面定义的异常变量，如果有子父类关系，那么子类的异常变量必须写在上面，否则报错
+* 3、多个异常一次捕获一次处理
+一个try一个catch，直接用Exception  
+
+运行时异常被抛出可以不处理，既不捕获也不声明抛出  
+默认给虚拟机处理，终止程序，什么时候不抛出运行异常了，在来继续执行程序  
+
+```java
+int[] arr = {1,2,3};
+//System.oue.println(arr[3]);//ArrayIndexOutOfBoundsException:3  
+list<Integer> list = List.of(1,2,3);
+System.out.println(list.get(3));//IndexOutOfBoundsException:Index 3 out-of--bounds for length 3   
+
+System.out.println("后续代码");
+```
+
+### 异常注意事项-子父类异常  
+
+子父类异常：  
+- 如果父类抛出了多个子类，子类重写父类的方法时，抛出和父类相同的异常或者是父类异常的子类或者不抛出  
+- 父类方法没有抛出异常，子类重写父类方法时也不可抛出异常，此时子类产生的异常，只能捕获处理，不能声明抛出   
+
+注意：  
+父类异常什么样子，子类异常就是什么样子   
+
+```java
+public class Fu {
+    public void show01() throws NullPointerException,ClassCastException{}
+    public void show02() throws IndexOutOfBoundsException{} 
+    public void show03() throws IndexOutOfBoundsException{}
+    public void show04() throws Exception{}
+}
+
+class Zi extends Fu{
+    //子类重写父类方法时，抛出和父类相同的异常
+    public void show01() throws NullPointerException,ClassCastException{}
+    //子类重写父类时，抛出父类异常的子类
+    public void show02() throws ArrayIndexOutOfBoundsException{}
+    //子类重写父类的方法时，不抛出异常
+    public void show03(){}
+    /*
+    父类方法没有异常，子类重写父类该方法时也不可抛出异常
+     */
+    //    public void show04() throws Exception{}
+    //此时子类产生的异常，只能捕获处理，不能声明抛出
+    public void show04(){
+        try {
+            throw new Exception("编译期异常");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
