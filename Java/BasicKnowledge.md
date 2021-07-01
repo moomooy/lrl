@@ -3677,7 +3677,7 @@ java.text.DateFormat:是日期/时间格式化子类的抽象类
 作用：  
     格式化（也就是日期->文本）、解析（文本->日期）  
 成员方法：  
-    String format(Date date) 按照指定的模式，把Date日期格式化为符合模式的字符串  
+    Strite) 按照指定的模式，把Date日期格式化为符合模式的字符串  
     Date parse(String source) 把符合模式的字符串，解析为Date日期  
 
 DateFormat类是一个抽象类，无法直接创建对象，可以使用DateFormat的子类  
@@ -5581,6 +5581,929 @@ class Zi extends Fu{
             throw new Exception("编译期异常");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+}
+```  
+
+
+### 自定义异常类  
+
+java提供的异常类，不够我们用，需要自己定义一些异常类  
+
+格式：  
+public class XXXException extends Exception  | runtimeException{
+    添加一个空参数的构造方法   
+    添加一个带异常信息的构造方法
+}  
+
+注意：  
+1、自定义异常类一般都是以Exception结尾，说明该类是 一个异常类  
+2、自定义异常类，必须的继承Exception或者runtimeException  
+继承Exception：那自定义的异常就是一个编译期异常，如果方法内部抛出了编译期异常，就必须处理这个异常，要么throw，要么try...catch  
+继承runtimeException：那么自定义的异常类就是一个运行期，无需处理，交给虚拟机处理(中断处理)  
+
+```java
+public class RegisterException  extends Exception {
+    //添加一个空参数的构造方法  
+    public RegisterException(){
+        super();
+    }
+    /*
+    添加一个异常信息的构造方法 
+    查看源代码，所有的异常类都会有一个带异常信息的构造方法，方法内部会调用父类带异常信息的构造方法，让父类来处理这个异常信息   
+     */
+
+    public RegisterException(String message) {
+        super(message);
+    }
+}
+```
+
+
+## 多线程  
+
+### 并发和并行  
+
+并发：指两个或多个事件在同一个时间段内发生，交替执行  
+并行：指两个或多个事件在同一个时刻发生(同时发生)，同时执行  
+
+### 进程概念  
+
+内存：所有应用程序都需要进入到内存中执行，临时存储RAM  
+
+点击应用程序执行，进入到内存中，占用一些内存执行，进入到内存的程序叫进程  
+任务管理器-->结束进程，就把进程从内存中清除了  
+
+### 线程概念  
+
+cpu中央处理器：对数据进行计算，指挥电脑中软件和硬件干活   
+
+例如：腾讯电脑管家  
+
+1、点击运行，会进入到内存中，就是一个进程  
+
+2、点击功能(病毒查杀，清理垃圾等)执行就会开启一条应用程序到cpu的执行路径cpu就可以通过这个路径执行功能，这个路径有一个名字就叫线程，线程输入进程，是进程中一个执行单元，负责程序的执行  
+
+* 单核心单线程cpu：cpu在多个线程之间做高速的切换，轮流执行多个线程，效率低，切换速度(1/n毫秒)  
+
+* 4核心8线程：有8个线程，可以同时执行8个线程在多个任务之间做高速切换，是单线程的8倍  
+
+好处：效率高，多个线程之间互不影响   
+
+* 线程调度：  
+&emsp;分时调度：所有线程轮流使用CPU的使用权，平均分配每个线程占用CPU的时间  
+&emsp;抢占式调度：优先让优先级高的线程使用CPU，如果线程的优先级相同，那么会随机选择一个(线程随机性)，java使用的为抢占式调度  
+
+### 主线程  
+
+主线程：执行主(main)方法的线程  
+
+单线程程序：java程序中只有一个线程  
+执行从main方法开始，从上到下依次执行  
+
+JVM执行main方法，main方法会进入到栈内存   
+JVM会找操作系统开辟一条main方法通向cpu的执行路径   
+而这个路径有一个名字，叫做main(主)线程   
+
+
+### 创建多线程程序第一种方式  
+
+创建多线程程序的第一种方式：创建Thread类的子类  
+java.lang.Thread类：是描述线程的类，我们想要实现多线程程序，就必须继承Thread类  
+
+实现步骤：  
+1、创建一个Thread子类  
+2、在Thread类的子类中重写Thread类中方的run方法，设置线程任务(开启线程要做什么？)  
+3、创建Thread类的子类对象  
+4、调用Thread类中的方法start方法，开启新的线程，执行run方法  
+&emsp;void start()使用该线程开始执行，java虚拟机调用该线程的run方法  
+&emsp;结果是两个线程并发地运行；当前线程(main线程)和另一个线程(创建的新线程，执行其run方法)  
+&emsp;多次启动一个线程是非法的，特别是当前线程已经结束执行后，不能再重新启动  
+
+Java程序属于抢占式调度，那个线程的优先级高，哪个线程优先执行，同一个优先级，随机选择一个执行   
+
+```java
+public class Demo01Thread {
+    public static void main(String[] args) {
+        //3、创建Thread类的子类对象
+        MyThread mt = new MyThread();
+        //4、调用Thread类中的方法start方法，开启新的线程，执行run方法
+        mt.start();
+
+        for (int i = 0; i <20 ; i++) {
+            System.out.println("main"+i);
+        }
+    }
+}
+
+//1、创建一个Thread类的子类
+class MyThread extends Thread{
+    //2、在Thread类的子类中重写Thread类中方的run方法，设置线程任务(开启线程要做什么？)
+
+    @Override
+    public void run() {
+        for (int i = 0; i <20 ; i++) {
+            System.out.println("run"+i);
+        }
+    }
+}
+```
+
+
+### Thread类的常用方法-获取线程名称   
+
+获取线程的名称：  
+1、使用Thread类中的方法getName();
+String getName() 返回该线程的名称   
+
+2、可以先获取到当前正在执行的线程，使用线程中的方法getName()获取线程的名称  
+static  Thread  currentThread()返回当前正在执行的线程对象的引用  
+
+```java
+public class Demo01GetThreadName {
+    public static void main(String[] args) {
+        //创建Thread类的子类对象
+        MyThread mt = new MyThread();
+        //调用start方法，开启新线程，执行run方法
+        mt.start();
+
+        new MyThread().start();
+        new MyThread().start();
+    }
+}
+
+//定义一个Thread类的子类
+class MyThread extends Thread{
+    //重写Thread类的run方法，设置线程任务
+
+    @Override
+    public void run() {
+       /*
+       1、获取线程名称
+       String name = getName();
+       System.out.println(name);
+        */
+
+      /* Thread t = Thread.currentThread();
+       System.out.println(t);
+        String name = t.getName();
+        System.out.println(name);
+        */
+
+        //链式编程
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+```
+
+### Thread类的常用方法-设置线程的名称  
+
+设置线程的名称：(了解)  
+1、使用Thread类中的方法setName(名字)  
+* void setName(string name) 改变线程名称，使之与参数name相同  
+2、创建一个带参数的构造方法，参数传递线程的名称，调用父类的带参构造方法，把线程名称传递给父类，让父类(Tread)给子线程起一个名字  
+* Thread(Stirng name) 分配新的Thread对象   
+
+
+```java
+public class Demo01GetThreadName {
+    public static void main(String[] args) {
+        //开启多线程
+        MyThread mt = new MyThread();
+        mt.setName("小强");
+        mt.start();
+
+        //开启多线程
+        new MyThread("旺财").start();
+}
+}
+
+//定义一个Thread类的子类
+class MyThread extends Thread{
+    public MyThread(){}
+
+    public MyThread(String name){
+        super(name);//把线程名称传递给父类，让父类(Thread)给子线程起一个名字
+    }
+    @Override
+    public void run() {
+        //获取线程名称
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+```
+
+### Thread常用方法-sleep  
+
+public static void sleep(long millis):使当前正在执行的线程以指定的毫秒数暂停(暂时停止执行)  
+毫秒数结束之后，线程继续执行   
+
+```java
+public class DemoSlee {
+    public static void main(String[] args) {
+        //模拟秒表
+        for (int i = 0; i <20 ; i++) {
+            System.out.println(i);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+}
+```
+
+### 创建多线程程序的第二种方式   
+
+创建多线程的第二种方式：实现runnable接口   
+java.lang.Runnable  
+&emsp;Runnable接口应该由那些打算通过某一线程执行其实例的类来实现。类必须定义一个称为run的无参方法  
+
+java.lang.Thread类的构造方法  
+&emsp;Thread(Runnable target) 分配新的Thread对象   
+&emsp;Thread(Runnable target，String name)分配新的Thread对象  
+
+实现步骤：  
+1、创建一个Runnable接口的实现  
+2、在实现类种重写Runnable接口的run方法，设置线程任务  
+3、创建一个Runnable接口的实现类对象  
+4、创建Thread类对象，构造方法中传递Runnable接口的实现类对象   
+5、调用Thread类中的start方法，开启新的线程执行run方法  
+
+实现Runnable接口创建多线程程序的好处：  
+&emsp;1、避免了单继承的局限性  
+&emsp;&emsp;一个类只能继承一个类(一个人只能有一个爹)，类继承了Thread类就不能继承其他的类  
+&emsp;&emsp;实现了Runnable接口，还可以继承其他的类，实现其他的接口  
+&emsp;2、增强了程序的扩展性，降低了程序的耦合性(解耦)  
+&emsp;&emsp;实现Runnable接口的方式，把设置线程任务和开启新线程进行了分离(解耦)  
+&emsp;&emsp;实现类中，重写了run方法，用来设置线程任务  
+&emsp;&emsp;创建Thread类对象，调用start方法，用来开启新线程
+
+```java
+
+//1、创建一个Runnable接口的实现
+public class Runnableimp implements Runnable {
+    //2、在实现类种重写Runnable接口的run方法，设置线程任务
+    @Override
+    public void run() {
+        for (int i = 0; i <20 ; i++) {
+            System.out.println(Thread.currentThread().getName());
+        }
+    }
+}
+
+
+public class Demo01Runnable {
+    public static void main(String[] args) {
+        //3、创建一个Runnable接口的实现类对象
+        Runnableimp run = new Runnableimp();
+
+        //  4、创建Thread类对象，构造方法中传递Runnable接口的实现类对象
+        Thread t = new Thread(run);
+
+        //5、调用Thread类中的start方法，开启新的线程执行run方法
+        t.start();
+
+        for (int i = 0; i <20 ; i++) {
+            System.out.println(Thread.currentThread().getName()+"-->"+i);
+        }
+    }
+}
+```
+
+### 匿名内部类方式实现线程的创建  
+
+匿名：没有名字  
+内部类：写在其他类内部的类  
+
+匿名内部类作用：简化代码  
+&emsp;把子类继承父类，重写父类的方法，创建子类对象合一部完成  
+&emsp;把实现类实现接口，重写接口中的方法，创建实现类对象合成一步完成  
+匿名内部类的最终产物：子类/实现类对象，而这个类没有名字  
+
+格式：  
+new  父类/接口(){  
+    重复父类 / 接口中的方法  
+};  
+
+```java
+public class Demo01Inner {
+    public static void main(String[] args) {
+        //线程的父类是Thread
+        //new MyThread().start();
+        new Thread(){
+            //重写run方法，设置线程任务
+
+            @Override
+            public void run() {
+                for (int i = 0; i < 20; i++) {
+                    System.out.println(Thread.currentThread().getName()+"--->"+"黑马");
+                }
+            }
+        }.start();
+
+        //线程的接口Runnable
+        //Runnable r = new Runnableimp();//多态
+        Runnable r =new Runnable(){
+            @Override
+            public void run() {
+                for (int i = 0; i < 20; i++) {
+                    System.out.println(Thread.currentThread().getName()+"--》"+"程序员");
+                }
+            }
+        };
+        new Thread(r).start();
+        
+        //简化接口的方式
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 20; i++) {
+                    System.out.println(Thread.currentThread().getName()+"传值");
+                }
+            }
+        }).start();
+    }
+}
+```
+
+### 线程安全问题  
+
+#### 概述  
+
+例：一个窗口卖一百张票  
+* 1、单线程程序是不会出现线程安全问题的  
+
+例：3个窗口一起卖票，卖的票也不同，也不会出现问题  
+* 2、多线程程序，没有访问共享数据，也不会产生问题  
+
+例：3个窗口卖的票是一样的，就会出现安全问题  
+* 3、多线程访问了共享的数据，会产生线程安全问题   
+
+```java
+public class Runnableimp implements Runnable {
+    //2、在实现类种重写Runnable接口的run方法，设置线程任务
+
+    private int ticket = 100;
+    @Override
+    public void run() {
+   while (true){
+       if(ticket>0){
+           //提高安全问题出现的概率，让程序睡眠
+           try {
+               Thread.sleep(10);
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+           System.out.println(Thread.currentThread().getName()+"-->正在买票"+ticket+"张票");
+           ticket--;
+       }
+        }
+    }
+}
+
+ public class DemoTicket {
+        public static void main(String[] args) {
+        Runnableimp run = new Runnableimp();
+        Thread t0 = new Thread(run);
+        Thread t1 = new Thread(run);
+        Thread t2 = new Thread(run);
+
+        t0.start();
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+#### 原理  
+
+上述代码，开启了三个线程，t0，t1，t2，三个代码一起抢夺cpu的执行权  
+
+当线程抢到了cpu的执行权，进入到run方法中执行，执行到if语句，sleep就会失去cpu的执行权，当三个线程同时在sleep  
+
+* 1、t2先睡醒了，抢到了cpu的执行权，继续执行卖票卖第一张，ticket--=0，继续执行小于0，不执行啦  
+* 2、t1睡醒了，抢到了cpu的执行权，继续执行卖第0张票，ticket--=-1，继续执行小于0，不执行啦   
+* 3、t0睡醒了，抢到了cpu的执行权，继续执行卖第-1张票，ticket--=-2，继续执行小于0，不执行啦  
+
+注意：线程安全问题是不能产生的，我们可以让一个线程在访问共享数据的时候，无论是否失去cpu的执行权，让其他线程只能等待，等待当前线程卖完票，其他进程再进行卖票，保证一个线程在卖票  
+
+#### 同步代码块   
+
+卖票案例出现了线程安全问题  
+卖出了不存在的票和重复的票  
+
+解决线程安全问题的一种方案，使用同步代码块  
+格式：  
+synchronized(锁对象){  
+    可能会出现线程安全问题的代码(访问了共享数据的代码)  
+}  
+
+注意：  
+1、通过代码块中的锁对象，可以使用任意的对象  
+2、但是必须保证多个线程使用的锁对象是同一个  
+3、锁对象作用：  
+   把同步代码块锁住，只让一个线程在同步代码块中执行  
+
+```java
+public class Runnableimp implements Runnable {
+    //2、在实现类种重写Runnable接口的run方法，设置线程任务
+
+    //创建锁对象
+    Object obj = new Object();
+
+    private int ticket = 100;
+    @Override
+    public void run() {
+   while (true){
+       synchronized(obj){
+
+           if(ticket>0){
+               //提高安全问题出现的概率，让程序睡眠
+               try {
+                   Thread.sleep(10);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               System.out.println(Thread.currentThread().getName()+"-->正在买票"+ticket+"张票");
+               ticket--;
+           }
+       }
+        }
+    }
+}
+```
+
+#### 同步代码块的原理  
+
+使用了一个锁对象，这个锁对象叫同步锁，也叫对象锁，也叫做对象监视器  
+
+3个线程一起抢夺cpu的执行权，谁抢到了谁执行run方法进行卖票  
+&emsp;t0抢到了cpu执行权，执行了run方法，遇到了synchronized代码块  
+&emsp;这时t0会检查synchronized代码块是否有锁对象  
+&emsp;发现有，就会获取到锁对象，进入到同步中执行  
+
+&emsp;t1抢到了cpu执行权，执行了run方法，遇到了synchronized代码块  
+&emsp;这时t1会检查synchronized代码块是否有锁对象  
+&emsp;发现没有，t1就会进入堵塞状态，会一直等待t0线程归还锁对象  
+&emsp;一直到t0线程执行完同步中的代码，会把锁对象归还给同步代码块  
+&emsp;t1才能获取到锁对象进入到同步中执行  
+
+* 总结：同步中的线程，没有执行完毕不会释放锁，同步外的线程没有锁进不去同步  
+
+同步保证了只能有一个线程再同步中执行共享数据保证了安全  
+程序频繁的判断锁，获取锁，释放锁，程序的效率更低  
+
+#### 同步方法   
+
+卖票案例出现了线程安全问题   
+卖不了不存在或者重复的票  
+解决线程安全问题的第二种方案：使用同步方法  
+使用步骤：  
+1、把访问了共享数据的代码抽取出来，放到一个方法中  
+2、在方法上添加synchronized修饰符  
+
+格式：定义方法的格式  
+修饰符  synchronized  返回值类型  方法名(参数列表){  
+    可能会出现线程安全问题的代码(访问了共享数据的代码)  
+}  
+
+```java
+public class Runnableimp implements Runnable {
+    //2、在实现类种重写Runnable接口的run方法，设置线程任务
+    private int ticket = 100;
+    @Override
+    public void run() {
+   while (true){
+payTicket();
+       }
+        }
+        /*
+        定义一个同步方法 
+        同步方法也会把方法内部的代码锁住
+        只让一个线程执行  
+        同步方法的锁对象是谁?
+        就是实现对象 new Runnableimp()
+        也就是this
+         */
+        public synchronized void payTicket(){
+            if(ticket>0){
+                //提高安全问题出现的概率，让程序睡眠
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName()+"-->正在买票"+ticket+"张票");
+                ticket--;
+            }
+        }
+}
+```
+
+#### 静态同步方法  
+
+静态的同步方法  
+锁对象不能是this，this是创建对象之后产生的，静态方法优于对象  
+静态方法的锁对象是本类的class属性-->class文件对象(反射)  
+
+```java
+public class Runnableimp implements Runnable {
+    //2、在实现类种重写Runnable接口的run方法，设置线程任务
+    private static int ticket = 100;
+    @Override
+    public void run() {
+   while (true){
+payTicket();
+       }
+        }
+
+        public static synchronized void payTicket(){
+            if(ticket>0){
+                //提高安全问题出现的概率，让程序睡眠
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName()+"-->正在买票"+ticket+"张票");
+                ticket--;
+            }
+        }
+}
+```
+
+
+#### Lock锁  
+
+卖票案例出现了线程安全问题   
+卖不了不存在或者重复的票  
+
+解决线程安全问题的第三种方案：使用Lock锁  
+java.util.concurrent.locks.lock接口  
+lock实现提供了比使用synchronized方法和语句可获得的更广泛的锁定操作
+Lock接口中的方法：  
+void Lock()获取锁；  
+void unLock()释放锁；  
+java.util.concurrent.locks.ReentrantLock  implements Locks 接口  
+
+使用步骤：  
+&emsp;1、在成员位置创建一个Reentrantlock对象  
+&emsp;2、在可能会出现安全问题的代码前调用Lock接口中的方法Lock获取锁  
+&emsp;3、在可能会出现安全问题的代码前调用Lock接口中的方法unLock释放锁   
+
+```java
+public class Runnableimp implements Runnable {
+    //2、在实现类种重写Runnable接口的run方法，设置线程任务
+    private int ticket = 100;
+
+    Lock l = new ReentrantLock();
+
+    @Override
+    public void run() {
+   while (true){
+l.lock();
+           if(ticket>0){
+               //提高安全问题出现的概率，让程序睡眠
+               try {
+                   Thread.sleep(10);
+                   System.out.println(Thread.currentThread().getName()+"-->正在买票"+ticket+"张票");
+                   ticket--;
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }finally {
+                   l.unlock();
+               }
+
+           }
+       }
+        }
+}
+```
+
+### 线程状态  
+
+NEW(新建状态) 至今尚未启动的线程处于这种状态   
+RUNNABLE(运行状态) 正在Java虚拟机执行的线程处于这种状态  
+BLOCKED(阻塞状态) 受阻塞并等待某个监视器锁的线程处于这种状态  
+WAITING(无限等待状态) 无限期等待另一个进程来执行某一特定操作的线程处于这种状态  
+TIME-WAITING(休眠状态) 等待另一个线程来执行取决于指定等待时间的操作的线程处于这种状态  
+TERMINATED(死亡状态) 已退出的线程处于这种状态  
+
+阻塞状态：具有cpu的执行资格，等待cpu空闲时执行  
+休眠状态:放弃cpu的执行资格，cpu空闲，也不执行  
+
+#### 等待唤醒  
+
+等待唤醒案例：线程之间的通信  
+创建一个顾客线程(消费指):告知老板要的包子的种类和数量，调用wait方法，放弃cpu的执行，进入到waiting状态(无限等待)   
+创建一个老板线程(生产者)：花了5秒做包子，做好包子之后，调用notify方法，唤醒顾客吃包子  
+
+注意：  
+&emsp;顾客和老板线程必须使用同步代码块包裹起来，保证等待和唤醒只能有一个在执行  
+&emsp;同步使用的锁对象必须保证唯一  
+&emsp;只有锁对象才能调用wait和notify方法   
+
+Object类中的方法  
+void wait()  在其他线程调用此对象的notify()方法或notifyAll()方法前，导致当前线程等待  
+void notify() 唤醒在此对象监视器上等待的单个线程会继续执行wait之后的代码  
+
+```java
+public class DemoWaitandNotify {
+    public static void main(String[] args) {
+        //创建锁对象，保证唯一
+        Object obj = new Object();
+        //创建一个顾客线程
+        new Thread(){
+            @Override
+            public void run() {
+                //一直等着买包子
+                while (true){
+                    //保证等待和唤醒的线程只能有一个执行，需要使用同步技术
+                    synchronized (obj){
+                        System.out.println("告知老板要的包子的种类和数量");
+                        //调用wait方法，放弃cpu的执行，进入到WAITING状态(无限等待)
+                        try {
+                            obj.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //唤醒之后执行的代码
+                        System.out.println("包子已经做好了，开吃！");
+                    }
+                }
+            }
+        }.start();
+
+        //创建一个老板线程
+        new Thread(){
+            @Override
+            public void run() {
+                while (true){
+                    //花了5秒做包子
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    //保证等待和唤醒的线程只能有一个执行，需要使用同步技术
+                    synchronized (obj){
+                        System.out.println("老板花了5秒做包子，告知顾客，可以吃包子");
+                        //做好包子，唤醒顾客
+                        obj.notify();
+                    }
+                }
+            }
+        }.start();
+    }
+}
+```  
+
+### Object类中wait带参数方法和noti  
+
+进入到TimeWaiting(计时等待)有两种方式  
+1、使用Sleep(long m)方法，在毫秒值结束之后，线程睡醒进入到Runnable/Blocked  
+2、使用wait(long m)方法，wait方法如果在毫秒值结束之后，还没有被notify唤醒，就会自动醒来，线程睡醒进入到Runnable/blocked状态  
+
+唤醒的方法：  
+void notify() 唤醒在此对象监视器上等待的单个线程  
+void notifyAll()唤醒在此对象监视器上等待的所有线程  
+
+```java
+public class wait {
+    public static void main(String[] args) {
+        //创建锁对象，保证唯一
+        Object obj = new Object();
+        //创建一个顾客线程
+        new Thread(){
+            @Override
+            public void run() {
+                //一直等着买包子
+                while (true){
+                    //保证等待和唤醒的线程只能有一个执行，需要使用同步技术
+                    synchronized (obj){
+                        System.out.println("告知老板要的包子的种类和数量");
+                        //调用wait方法，放弃cpu的执行，进入到WAITING状态(无限等待)
+                        try {
+                            obj.wait(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //唤醒之后执行的代码
+                        System.out.println("包子已经做好了，开吃！");
+                    }
+                }
+            }
+        }.start();
+    }
+}
+```
+
+```java
+public class wait {
+    public static void main(String[] args) {
+        //创建锁对象，保证唯一
+        Object obj = new Object();
+        //创建一个顾客线程
+        new Thread(){
+            @Override
+            public void run() {
+                //一直等着买包子
+                while (true){
+                    //保证等待和唤醒的线程只能有一个执行，需要使用同步技术
+                    synchronized (obj){
+                        System.out.println("顾客1告知老板要的包子的种类和数量");
+                        //调用wait方法，放弃cpu的执行，进入到WAITING状态(无限等待)
+                        try {
+                            obj.wait(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //唤醒之后执行的代码
+                        System.out.println("包子已经做好了，顾客1开吃！");
+                    }
+                }
+            }
+        }.start();
+        
+        //创建一个顾客线程
+        new Thread(){
+            @Override
+            public void run() {
+                //一直等着买包子
+                while (true){
+                    //保证等待和唤醒的线程只能有一个执行，需要使用同步技术
+                    synchronized (obj){
+                        System.out.println("顾客2告知老板要的包子的种类和数量");
+                        //调用wait方法，放弃cpu的执行，进入到WAITING状态(无限等待)
+                        try {
+                            obj.wait(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //唤醒之后执行的代码
+                        System.out.println("包子已经做好了，顾客2开吃！");
+                    }
+                }
+            }
+        }.start();
+
+        //创建一个老板线程
+        new Thread(){
+            @Override
+            public void run() {
+                while (true){
+                    //花了5秒做包子
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    //保证等待和唤醒的线程只能有一个执行，需要使用同步技术
+                    synchronized (obj){
+                        System.out.println("老板花了5秒做包子，告知顾客，可以吃包子");
+                        //做好包子，唤醒顾客
+                        obj.notify();
+                        //obj.notifyAll();
+                    }
+                }
+            }
+        }.start();
+    }
+}
+```
+
+### 等待唤醒机制  
+
+等待与唤醒机制：线程之间的通信  
+* 重点：有效利用资源(生产一个包子，吃一个包子，再生产一个包子，再吃一个包子)  
+
+通信：对包子的状态进行判断  
+&emsp;没有包子-->吃货线程唤醒包子铺线程-->吃货线程等待-->包子铺线程做包子-->做好包子-->修改包子的状态为有  
+&emsp;有包子-->包子铺线程唤醒吃货线程-->吃货吃包子-->吃完包子-->修改包子的状态为没有  
+&emsp;没有包子-->吃货线程唤醒包子铺线程-->吃货线程等待-->包子铺线程做包子-->做好包子-->修改包子的状态为有   
+
+
+### 线程池  
+
+线程池：JDK1.5之后提供的  
+java.util.concurrent.Executors:线程池的工厂类，用来生成线程池  
+Executors类中的静态方法：  
+static ExecutorService newFixedThreadPool(int nnThread)创建一个可重用固定线程数的线程池  
+参数： int nThread；创建线程池中包含的线程数量  
+返回值：  
+ExecutorService接口，返回的是ExecutorService接口的实现类对象，我们可以使用ExecutorService接口接收(面向接口编程)  
+
+
+java.util.concurrent.ExecutorService:线程池接口  
+用来从线程池中获取线程，调用start方法，执行线程任务  
+submit(Runnable task) 提交一个Runnable任务用于执行  
+关闭/销毁线程池的方法  
+void shutdown() 
+
+线程池的使用步骤：  
+1、使用线程池的工厂类Executors里边提供的静态方法newFixedThreadPool生产一个指定线程数量的线程池  
+2、创建一个类，实现Runnable接口，重写Run方法，设置线程任务  
+3、调用ExecutorService中的方法submit，传递线程任务(实现类)，开启线程，执行run方法  
+4、调用ExecutorService中的方法shutdown销毁线程池  
+
+```java
+public class ThreadPool {
+    public static void main(String[] args) {
+        //1、使用线程池的工厂类Executors里边提供的静态方法newFixedThreadPool生产一个指定线程数量的线程池 
+        ExecutorService es = Executors.newFixedThreadPool(2);
+        //3、调用ExecutorService中的方法submit，传递线程任务(实现类)，开启线程，执行run方法 
+        es.submit(new Runnableimp());
+        es.submit(new Runnableimp());
+        es.submit(new Runnableimp());
+    }
+}
+ 
+//2、创建一个类，实现Runnable接口，重写Run方法，设置线程任务  
+ public class Runnableimp implements Runnable{
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName()+"创建了一个新的线程");
+    }
+}
+```
+
+### 函数式编程思想概述  
+
+面向对象的思想：做一件事情，找一个能解决这个事情的对象，调用对象的方法，完成事情  
+函数式编程思想：只要能获取到结果，谁去做的，怎么做的都不重要，重视的是结果，不重视过程  
+
+```java
+public class Lambda {
+    public static void main(String[] args) {
+        //使用匿名内部类的方式，实现多线程
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(Thread.currentThread().getName()+"新线程");
+            }
+        }).start();
+
+        //使用lambda表达式，实现多线程
+        new Thread(()->{
+            System.out.println(Thread.currentThread().getName()+"新线程");
+        }
+        ).start();
+    }
+}
+```   
+
+lambda表达式的标准格式:  
+由三个部分组成：  
+a.一些参数  
+b.一个箭头  
+c.一段代码  
+
+格式：(参数列表) ->(一段重写方法的代码);  
+解释说明：   
+() ：接口中抽象方法的参数列表，没有参数，就空着；有参数就写出参数，多个参数使用逗号分隔  
+-> : 传递的意思，把参数传递给方法体()  
+{} ： 重写接口的抽象方法的方法体   
+
+### lambda表达式有参数有返回值的
+
+lambda表达式有参数有返回值的练习   
+需求：  
+&emsp;使用数组存储多个Person对象   
+&emsp;对数组中的Person对象使用Arrays的sort方法通过年龄进行升序排序   
+
+```java
+public class lambdaArrays {
+    public static void main(String[] args) {
+        //使用数组存储多个Person对象
+        Person[] arr = {
+                new Person("迪丽热巴", 18),
+        new Person("古力娜扎", 17),
+        new Person("马儿扎哈", 20)
+        };
+
+        //对数组中的Person对象使用Arrays的sort方法通过年龄进行升序排序
+        /*Arrays.sort(arr, new Comparator<Person>() {
+            @Override
+            public int compare(Person o1, Person o2) {
+                return o1.getAge()-o2.getAge();
+            }
+        });*/
+
+        //使用lambda表达式，简化匿名内部类
+        Arrays.sort(arr,(Person o1, Person o2)->{
+            return o1.getAge()-o2.getAge();
+        });
+
+        //遍历数组
+        for(Person p : arr){
+            System.out.println(p);
         }
     }
 }
