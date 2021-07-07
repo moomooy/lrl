@@ -171,5 +171,16 @@ alter table 表名 drop 列名；
 3、修改数据  
 * 语法：  
 &emsp; update 表名 set 列名1 = 值1 ，列名2 = 值2，...[where 条件];  
-* 注意：如果不加任何条件，则会将表中所有记录全部修改  
+* 注意：如果不加任何条件，则会将表中所有记录全部修改    
 
+## DQL_查*询表中的记录  
+* select * from 表名;  
+ 
+1、语法 ：  
+select 字段列表  
+from 表名列表  
+where 条件列表  
+group by  分组字段  
+having 分组之后的条件  
+order by 排序  
+limit 分页限定  
